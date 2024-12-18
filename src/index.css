@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  scroll-behavior: smooth;
+  font-family: 'Poppins', sans-serif;
+  font-style: normal;
+}
+
+.hideBars::-webkit-scrollbar{
+  width: 1px;
+  height: 0;
+}
+
+.customScrollBar::-webkit-scrollbar{
+  width: 6px;
+}
+
+.customScrollBar::-webkit-scrollbar-thumb {
+  background: #1f355a;
+}
+
+.fluid-text {
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  line-height: 2.6rem;
+}
+
+/* 3D text styling */
+.three-d-text {
+  font-family: 'Arial', sans-serif;
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  text-shadow: -1px -1px 0 #d6d6d6, 1px 1px 0 #d6d6d6, 1px -1px 0 #d6d6d6, -1px 1px 0 #d6d6d6;
+}
+
+.slide-in {
+  animation: slideIn 1s ease-in-out;
+}
+
+.slide-out {
+  animation: slideOut 1s ease-in-out;
+}
+
+/* AnimatedPage.css */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-fade-in {
+  animation: fadeIn 1s ease-in-out;
+}
+
+@media (min-width: 968px) {
+  .fluid-text {
+    line-height: 3.3rem;
+  }
+}
