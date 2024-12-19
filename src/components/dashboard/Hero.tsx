@@ -1,7 +1,8 @@
 import TypewriterEffect from "../TypewriterEffect";
 import { CiSearch } from 'react-icons/ci';
 import { FormEvent, useState } from 'react';
-import AudioBooks from "./Audiobooks";
+import FeaturedBooks from "./FeaturedBooks";
+import RecentBooks from "./RecentBooks";
 
 type HeroProps = {
   appName: string;
@@ -45,7 +46,9 @@ export default function Hero(
         </button>
       </form>
 
-      <AudioBooks />
+      <RecentBooks />
+
+      <FeaturedBooks />
 
     </section>
   )

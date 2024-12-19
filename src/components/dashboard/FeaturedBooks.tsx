@@ -2,7 +2,7 @@ import React from 'react'
 import BookCard from '../BookCard'
 
 
-export default function AudioBooks() {
+export default function FeaturedBooks() {
 
   const sampleBooks = [
     { id: '1', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '' },
