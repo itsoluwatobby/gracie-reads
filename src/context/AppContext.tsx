@@ -6,7 +6,7 @@ export const AppContextDataProvider = (
 ) => {
   const [appInfo] = useState(
     {
-      name: 'Gracie Reads',
+      name: 'Lovely Audios',
       email: '',
       workPlace: '',
     },
@@ -17,10 +17,11 @@ export const AppContextDataProvider = (
         '(prefers-color-scheme: dark)'
       ).matches ? 'dark' : 'light'
   );
-  // const [tabName, setTabName] = useState<SideTabs>(SideTabEnum.Transaction);
+  const [toggleModal, setToggleModal] = useState(false);
 
   const value = {
-    theme, setTheme, appInfo,
+    theme, setTheme,
+    appInfo, toggleModal, setToggleModal,
   };
 
   return (

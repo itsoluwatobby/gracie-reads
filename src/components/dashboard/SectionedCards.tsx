@@ -1,8 +1,11 @@
 import React from 'react'
 import BookCard from '../BookCard'
 
+type SectionedCardsProps = {
+  sectionTitle: string
+}
 
-export default function FeaturedBooks() {
+export default function SectionedCards({ sectionTitle }: SectionedCardsProps) {
 
   const sampleBooks = [
     { id: '1', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '' },
@@ -18,7 +21,7 @@ export default function FeaturedBooks() {
   return (
     <section className='w-full flex flex-col gap-4'>
       <div className='flex flex-col'>
-        <p>Featured Audiobooks</p>
+        <p>{sectionTitle}</p>
         <div className='w-full h-1 bg-gray-300'></div>
       </div>
 

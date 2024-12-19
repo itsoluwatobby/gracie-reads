@@ -1,8 +1,8 @@
 import TypewriterEffect from "../TypewriterEffect";
 import { CiSearch } from 'react-icons/ci';
 import { FormEvent, useState } from 'react';
-import FeaturedBooks from "./FeaturedBooks";
-import RecentBooks from "./RecentBooks";
+import SectionedCards from "./SectionedCards";
+// import RecentBooks from "./RecentBooks";
 
 type HeroProps = {
   appName: string;
@@ -26,13 +26,13 @@ export default function Hero(
       className='text-base flex flex-col md:p-6 md:m-auto gap-y-8 h[87vh] w-full items-center pb-10'
       id='home'
     >
-      <div className='text-xl font-medium flex flex-col gap-6 py-10 items-center text-center'>
-        <p className="fluid-text transition-transform text-blue-50 tracking-wide font-bold mobile:text-3xl">{appName}.</p>
+      <div className='text-xl font-medium flex flex-col gap-10 py-10 items-center w-full'>
+        <p className="fluid-text self-start transition-transform text-blue-50 tracking-wide font-bold mobile:text-3xl">{appName}.</p>
 
         <TypewriterEffect text="Enjoy your free audio books here." start="BEGIN" delay={0.4} />
       </div>
 
-      <form onSubmit={handleSearch} className='flex items-center midMobile:flex-col gap-x-2 gap-y-3 w-full'>
+      <form onSubmit={handleSearch} className='mb-5 flex items-center midMobile:flex-col gap-x-2 gap-y-3 w-full'>
         <input
           value={search}
           placeholder='what are you looking for...'
@@ -46,9 +46,8 @@ export default function Hero(
         </button>
       </form>
 
-      <RecentBooks />
-
-      <FeaturedBooks />
+      <SectionedCards sectionTitle='Recent Audiobooks' />
+      <SectionedCards sectionTitle='Featured Audiobooks' />
 
     </section>
   )
