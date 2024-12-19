@@ -18,7 +18,7 @@ export default function Hero(
   return (
     <section
       ref={observerRef}
-      className='text-base flex flex-col md:p-6 md:m-auto gap-y-8 h-[87vh] w-full items-center'
+      className='text-base flex flex-col md:p-6 md:m-auto gap-y-8 h[87vh] w-full items-center pb-10'
       id='home'
     >
       <div className='text-xl font-medium flex flex-col gap-6 py-10 items-center'>
@@ -27,17 +27,19 @@ export default function Hero(
         <TypewriterEffect text="Enjoy your free audio books here." start="BEGIN" delay={0.4} />
       </div>
 
-      <div className='flex items-center midMobile:flex-col gap-x-2 gap-y-3 w-full'>
+      <form className='flex items-center midMobile:flex-col gap-x-2 gap-y-3 w-full'>
         <input
           value={search}
           placeholder='what are you looking for...'
           onChange={e => setSearch(e.target.value)}
           className='flex-auto focus:border-blue focus:outline-none placeholder:text-gray-400 px-4 py-2 rounded-sm text-black'
         />
-        <button className='flex-none bg-[#ff0b0b] grid place-content-center text-2xl p-2 px-3 rounded'>
+        <button 
+        type="submit"
+        className='flex-none bg-[#ff0b0b] grid place-content-center text-2xl p-2 px-3 rounded'>
           <CiSearch />
         </button>
-      </div>
+      </form>
 
       <AudioBooks />
 

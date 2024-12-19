@@ -1,24 +1,29 @@
 import { Route, Routes } from 'react-router-dom';
 import AppLayout from './layout/AppLayout';
-import Dashboard from './pages/Dashboard';
 import { useAppContext } from './hooks/useAppContext';
 import { Toaster } from 'react-hot-toast';
 import { Header, Modal } from './components';
-import { Colors } from './utils/colors';
 import { useState } from 'react';
+import {
+  BookPage,
+  Dashboard,
+  PostBook,
+} from './pages';
 
 function App() {
   const { theme, appInfo } = useAppContext();
   const [toggle, setToggle] = useState(false);
 
   return (
-    <main className={`customScrollBar page-fade-in ${theme === 'light' ? 'bg-white' : `${Colors.navy} text-white`} w-full h-screen flex flex-col transition-colors overflow-y-scroll`}>
+    <main className={`customScrollBar page-fade-in ${theme === 'light' ? 'bg-white' : `bg-gradient-to-b from-[#163d78] via-[#4a4e55] to-[#010b1b] text-white`} w-full h-screen flex flex-col transition-colors overflow-y-scroll`}>
       <Header appName={appInfo.name} setToggle={setToggle} />
       <Modal toggle={toggle} setToggle={setToggle} />
 
       <Routes>
         <Route path='/' element={<AppLayout />}>
           <Route index element={<Dashboard />} />
+          <Route path=':id' element={<BookPage />} />
+          <Route path='post-book' element={<PostBook />} />
         </Route>
       </Routes>
 

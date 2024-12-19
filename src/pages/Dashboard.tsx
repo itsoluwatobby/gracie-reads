@@ -13,7 +13,7 @@ export default function Dashboard() {
   );
 
   return (
-    <div className='h-auto w-full flex flex-col px-10 mobile:px-5'>
+    <div className='h-auto w-full flex flex-col px-10 mobile:px-4'>
 
       <Hero 
         appName={appInfo.name}
