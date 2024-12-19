@@ -3,6 +3,7 @@ import { ModalTags,  } from '../utils';
 import NavButtons from './Navs';
 import ResumeButton from './Button';
 import Logo from './Logo';
+import { Link } from 'react-router-dom';
 
 type HeaderProps = {
   appName: string;
@@ -14,7 +15,9 @@ export default function Header({ appName, setToggle }: HeaderProps) {
   return (
     <header className={`sticky top-0 w-full pl-1 pt-4 pr-3 bg-[#751225] flex items-center justify-between h-16 z-10 shadow-md transition-transform lg:px-10`}>
 
-      <Logo appName={appName} />
+      <Link to='/'>
+        <Logo appName={appName} />
+      </Link>
 
       <ul className='hidden md:flex items-center gap-x-6 list-none'>
         {
