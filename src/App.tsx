@@ -22,7 +22,7 @@ function App() {
       <Routes>
         <Route path='/' element={<AppLayout />}>
           <Route index element={<Dashboard />} />
-          <Route path=':id' element={<BookPage />} />
+          <Route path=':bookId' element={<BookPage />} />
           <Route path='post-book' element={<PostBook />} />
         </Route>
       </Routes>

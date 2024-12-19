@@ -26,7 +26,7 @@ export default function BookCard(
     to={`${bookId}`} 
     title={author}
     onMouseEnter={modifyHoverCount}
-    className={`flex flex-col rounded-md gap-1 h-56 w-40 text-sm cursor-pointer transition-transform ${hoverEffects[hoverIndex]}`}>
+    className={`flex flex-col rounded-md gap-1 h-56 w-40 mobile:w-36 mobile:h-52 text-sm cursor-pointer transition-transform ${hoverEffects[hoverIndex]}`}>
       <figure className='bg-gray-700 rounded-md w-full h-[80%]'>
         {
           thumbnail ?
@@ -36,7 +36,7 @@ export default function BookCard(
           : null
         }
       </figure>
-      <span className='capitalize font-medium'>{title}</span>
+      <span className='text-center capitalize font-medium'>{title}</span>
       <p className='flex items-center gap-1 overflow-hidden whitespace-nowrap'>
         <span>author:</span>
         <span className='capitalize font-medium'>{author}</span>

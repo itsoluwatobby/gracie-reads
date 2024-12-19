@@ -1,7 +1,9 @@
-
+import { useParams } from "react-router-dom"
 
 export default function BookPage() {
+  const { bookId } = useParams();
+
   return (
-    <div>BookPage</div>
+    <div>BookPage {bookId}</div>
   )
 }
