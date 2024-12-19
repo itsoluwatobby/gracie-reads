@@ -10,8 +10,9 @@ class Helper {
     return responseOutput
   }
 
-  public getFirstLetter(name = 'N') {
-    return name[0].toUpperCase();
+  public getFirstLetters(name = 'N O') {
+    const [firstName, lastName] = name.split(' ');
+    return `${firstName[0].toUpperCase()}${lastName[0].toLowerCase()}`;
   }
 
   public getCurrentDate() {

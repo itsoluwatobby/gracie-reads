@@ -1,34 +1,46 @@
 import TypewriterEffect from "../TypewriterEffect";
+import { CiSearch } from 'react-icons/ci';
+import { useState } from 'react';
+import AudioBooks from "./Audiobooks";
 
 type HeroProps = {
   appName: string;
-  workPlace: string;
   observerRef: React.LegacyRef<HTMLDivElement>
 }
 
 export default function Hero(
   {
-    appName, workPlace, observerRef,
+    appName, observerRef,
   }: HeroProps
 ) {
+  const [search, setSearch] = useState('');
+
   return (
-    <section 
-    ref={observerRef}
-    className='text-base flex flex-col justify-center md:p-6 md:m-auto gap-y-5 h-[87vh] pt14'
+    <section
+      ref={observerRef}
+      className='text-base flex flex-col md:p-6 md:m-auto gap-y-8 h-[87vh] w-full items-center'
       id='home'
     >
-      <div className='midScreen:leading-[3rem] leading-[3.5rem] tracking-wide font-mono text-cyan-200 text-xl'>
-        <TypewriterEffect text="Hello world, my name is..." start="BEGIN" delay={0.4} />
+      <div className='text-xl font-medium flex flex-col gap-6 py-10 items-center'>
+        <p className="fluid-text transition-transform text-blue-50 tracking-wide font-bold mobile:text-3xl">{appName}.</p>
+
+        <TypewriterEffect text="Enjoy your free audio books here." start="BEGIN" delay={0.4} />
       </div>
-      <article className="fluid-text transition-transform flex flex-col gap-y-4">
-        <p className="text-blue-50 tracking-wide font-bold mobile:text-3xl">{appName}.</p>
 
-        <p className="text-slate-400 font-bold mobile:text-3xl">I transform complex problems into elegant solutions.</p>
-      </article>
+      <div className='flex items-center midMobile:flex-col gap-x-2 gap-y-3 w-full'>
+        <input
+          value={search}
+          placeholder='what are you looking for...'
+          onChange={e => setSearch(e.target.value)}
+          className='flex-auto focus:border-blue focus:outline-none placeholder:text-gray-400 px-4 py-2 rounded-sm text-black'
+        />
+        <button className='flex-none bg-[#ff0b0b] grid place-content-center text-2xl p-2 px-3 rounded'>
+          <CiSearch />
+        </button>
+      </div>
 
-      <p className="text-slate-300 tracking-wide leading-7">
-        I'm a software developer specializing in building web applications and application servers. Presently building user centered applications and services at <span className="text-[#a5f3fc]">{workPlace}</span> and I'm committed to delivering high-quality solutions.
-      </p>
+      <AudioBooks />
+
     </section>
   )
 }

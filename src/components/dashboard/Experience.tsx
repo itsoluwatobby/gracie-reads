@@ -1,5 +1,3 @@
-// import { MdOutlineArrowRight } from "react-icons/md";
-import Title from "../Title";
 
 export default function Experience() {
 
@@ -10,8 +8,7 @@ export default function Experience() {
       id='experience'
       className=" h[87vh] pt-10 pb-20 mb-0 flex flex-col gap-y-6 bg-red-00"
     >
-      <Title bullet="02" page='Where I&apos;ve Worked' />
-
+    
       <div className="border-b-2 border-b-slate-600 text-slate-400 flex items-center justify-between">
         {
           workPlaces.map((place) => (

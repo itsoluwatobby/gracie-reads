@@ -1,4 +1,4 @@
-export const ModalTags = ['about', 'experience', 'work', 'contact'];
+export const ModalTags = ['about', 'categories', 'latest'];
 
 export const hoverEffects = [
   'hover:-translate-x-1 hover:-translate-y-0.5',
