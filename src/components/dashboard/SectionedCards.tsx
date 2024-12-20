@@ -19,14 +19,14 @@ export default function SectionedCards({ sectionTitle }: SectionedCardsProps) {
   ]
 
   return (
-    <section className='w-full flex flex-col gap-4'>
+    <section className='w-full flex flex-col gap-4 mb-4'>
       <div className='flex flex-col'>
         <p>{sectionTitle}</p>
-        <div className='w-full h-1 bg-gray-300'></div>
+        <div className='w-full h-1 bg-gradient-to-tr from-gray-200 via-gray-400 to-gray-200'></div>
       </div>
 
       <div className='flex flex-wrap gap-6 items-center justify-center transition-transform'>
-      {/* <div className='grid grid-cols-5 gap-4'> */}
+      {/* <div className='grid md:grid-cols-5 grid-cols-3 gap-4'> */}
         {
           sampleBooks.map((book) => (
             <BookCard 

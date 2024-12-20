@@ -37,7 +37,7 @@ export default function BookCard(
         }
       </figure>
       <span className='text-center capitalize font-medium'>{title}</span>
-      <p className='flex items-center gap-1 overflow-hidden whitespace-nowrap'>
+      <p className='flex items-center gap-1 overflow-hidden whitespace-nowrap text-[13px]'>
         <span>author:</span>
         <span className='capitalize font-medium'>{author}</span>
       </p>
