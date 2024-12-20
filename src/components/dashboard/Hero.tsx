@@ -32,7 +32,7 @@ export default function Hero(
         <TypewriterEffect text="Enjoy your free audio books here." start="BEGIN" delay={0.4} />
       </div>
 
-      <form onSubmit={handleSearch} className='mb-5 flex items-center midMobile:flex-col gap-x-2 gap-y-3 w-full'>
+      <form onSubmit={handleSearch} className='mb-5 flex items-center midMobile:flex-col gap-x-2 gap-y-3 w-full md:w-[55%]'>
         <input
           value={search}
           placeholder='what are you looking for...'

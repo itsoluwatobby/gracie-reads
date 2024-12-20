@@ -7,7 +7,7 @@ export const AppContextDataProvider = (
   const [appInfo] = useState(
     {
       name: 'Lovely Audios',
-      email: '',
+      email: 'crazywandyte@gmail.com',
       workPlace: '',
     },
   );
