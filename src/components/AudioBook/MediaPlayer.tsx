@@ -25,7 +25,7 @@ export default function MediaPlayer({ currentChapter }: MediaPlayerProps) {
       const seconds = Math.floor(currentTimeInSeconds % 60);
       setCountUpTime(`${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`);
       const progress = Math.ceil((currentTimeInSeconds / audioLength) * 100);
-      console.log({ progress, audioLength })
+      // console.log({ progress, audioLength })
       setMediaProgress(`w-[${progress}%]`);
     }
   };
@@ -40,8 +40,8 @@ export default function MediaPlayer({ currentChapter }: MediaPlayerProps) {
     };
   }, []);
 
-  console.log(audioLength)
-  console.log(mediaProgress)
+  // console.log(audioLength)
+  // console.log(mediaProgress)
 
   useEffect(() => {
     if (!startPlayer || !audioSource || !audioRef.current) return;
@@ -53,7 +53,7 @@ export default function MediaPlayer({ currentChapter }: MediaPlayerProps) {
         const seconds = Math.floor(durationInSeconds % 60);
         const formattedDuration = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         setMediaLength(formattedDuration ?? '00:00');
-        console.log({ durationInSeconds })
+        // console.log({ durationInSeconds })
         setAudioLength(durationInSeconds);
       }
     };

@@ -1,9 +1,11 @@
 import Dashboard from "./Dashboard";
-import PostBook from "./PostBook";
+import PostAudioBook from "./PostBook";
 import BookPage from "./BookPage";
+import PageNotFound from "./NotFound";
 
 export {
   Dashboard,
-  PostBook,
+  PostAudioBook,
   BookPage,
+  PageNotFound,
 };

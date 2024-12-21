@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import TypewriterEffect from "../TypewriterEffect";
 import { CiSearch } from 'react-icons/ci';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import SectionedCards from "./SectionedCards";
-// import RecentBooks from "./RecentBooks";
+import { dbStorage } from "../../firebase/Database";
+import toast from "react-hot-toast";
 
 type HeroProps = {
   appName: string;
@@ -20,6 +22,20 @@ export default function Hero(
     e.preventDefault()
     if (!search) return;
   }
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const audios = await dbStorage.fetchAudios();
+        console.log(audios);
+      } catch(err: any) {
+        console.log(err.message);
+        toast.error('Error fetching audio books');
+      }
+    }
+    fetch();
+  }, [])
+
   return (
     <section
       ref={observerRef}

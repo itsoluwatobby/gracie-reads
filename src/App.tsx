@@ -11,7 +11,8 @@ import { useState } from 'react';
 import {
   BookPage,
   Dashboard,
-  PostBook,
+  PageNotFound,
+  PostAudioBook,
 } from './pages';
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
   const [toggle, setToggle] = useState(false);
 
   return (
-    <main className={`customScrollBar page-fade-in max-w-[1440px] mx-auto ${theme === 'light' ? 'bg-white' : `bg-gradient-to-b from-[#163d78] via-[#4a4e55] to-[#010b1b] text-white`} w-full h-screen flex flex-col transition-colors overflow-y-scroll`}>
+    <main className={`customScrollBar page-fade-in max-w-[1440px] mx-auto ${theme === 'light' ? 'bg-white' : `bg-gradient-to-b from-[#163d78] via-[#4a4e55] to-[#010b1b] text-white`} w-full h-screen flex flex-col justify-between transition-colors overflow-y-scroll`}>
       <Header appName={appInfo.name} setToggle={setToggle} />
       <Modal toggle={toggle} setToggle={setToggle} />
 
@@ -27,8 +28,11 @@ function App() {
         <Route path='/' element={<AppLayout />}>
           <Route index element={<Dashboard />} />
           <Route path=':bookId' element={<BookPage />} />
-          <Route path='post-book' element={<PostBook />} />
+          <Route path='post-audio' element={<PostAudioBook />} />
         </Route>
+        
+        <Route path='*' element={<PageNotFound />} />
+
       </Routes>
 
       <Footer />
