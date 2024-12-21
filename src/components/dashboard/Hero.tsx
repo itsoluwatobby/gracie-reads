@@ -37,7 +37,7 @@ export default function Hero(
           value={search}
           placeholder='what are you looking for...'
           onChange={e => setSearch(e.target.value)}
-          className='flex-auto focus:border-blue focus:outline-none placeholder:text-gray-400 px-4 py-2 rounded-sm text-black midMobile:w-full'
+          className='flex-auto focus:border-blue focus:outline-none placeholder:text-gray-400 px-4 py-2 rounded-sm text-black'
         />
         <button 
         type="submit"

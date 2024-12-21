@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { AppContext } from './context';
 
+const initAudioState = {
+  audioPaused: false,
+  audioSource: '',
+  startPlayer: false,
+  // length: 0,
+};
+
 export const AppContextDataProvider = (
   { children }: { children: React.ReactNode },
 ) => {
@@ -18,10 +25,16 @@ export const AppContextDataProvider = (
       ).matches ? 'dark' : 'light'
   );
   const [toggleModal, setToggleModal] = useState(false);
+  const [mediaPlayer, setMediaPlayer] = useState<MediaPlayerProp>(initAudioState);
+
+  const deactivatePlayer = () => {
+    setMediaPlayer(initAudioState);
+  };
 
   const value = {
-    theme, setTheme,
+    theme, setTheme, deactivatePlayer,
     appInfo, toggleModal, setToggleModal,
+    mediaPlayer, setMediaPlayer,
   };
 
   return (

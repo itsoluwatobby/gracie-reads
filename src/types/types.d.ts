@@ -7,8 +7,11 @@ type AppContextProps = {
   appInfo: { name: string, email: string, workPlace: string };
   theme: Theme;
   toggleModal: boolean;
-  setToggleModal: React.Dispatch<React.SetStateAction<boolean>>;
+  mediaPlayer: MediaPlayerProp;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
+  setToggleModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setMediaPlayer: React.Dispatch<React.SetStateAction<MediaPlayerProp>>;
+  deactivatePlayer: () => void;
 }
 
 type InputType = 'text' | 'number' | 'checkbox' | 'numeric' | 'date'
@@ -32,14 +35,35 @@ type IntersectingProp = {
 
 type ImageReturnType = { status: string, url: string }
 
+type MediaPlayerProp = {
+  startPlayer: boolean,
+  audioPaused: boolean,
+  audioSource: string,
+  // length: number;
+}
+
+type ArrowDirection = 'upward' | 'downward';
+type ArrowButton = {
+  direction: ArrowDirection;
+  chapterId: string;
+}
+
+type Chapter = {
+  id: string;
+  link: string;
+  name: string;
+  duration: string;
+}
+
 interface AudioSchema {
   id?: string;
   thumbnail: string;
   author: string;
+  about?: string;
   createdAt: string;
   updatedAt: string; 
   genre: string;
-  audioLink: string;
+  chapters: Chapter[];
   title: string;
   isPublic: boolean;
   dislikes?: number
