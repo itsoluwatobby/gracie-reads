@@ -1,13 +1,10 @@
 import {
   Hero,
-  // Experience,
 } from "../components/dashboard";
-import { useAppContext } from "../hooks";
 import { IoMdArrowUp } from "react-icons/io";
 import { useIntersectionObserver } from "../hooks";
 
 export default function Dashboard() {
-  const { appInfo } = useAppContext();
   const { intersecting, observerRef } = useIntersectionObserver(
     { screenPosition: '0px', threshold: 0.9 },
   );
@@ -16,7 +13,6 @@ export default function Dashboard() {
     <div className='h-auto w-full flex flex-col px-10 mobile:px-4'>
 
       <Hero 
-        appName={appInfo.name}
         observerRef={observerRef  as React.LegacyRef<HTMLDivElement>}
       />
   

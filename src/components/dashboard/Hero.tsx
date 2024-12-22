@@ -5,17 +5,13 @@ import { FormEvent, useEffect, useState } from 'react';
 import SectionedCards from "./SectionedCards";
 import { dbStorage } from "../../firebase/Database";
 import toast from "react-hot-toast";
+import PageHeader from "../PageHeader";
 
 type HeroProps = {
-  appName: string;
   observerRef: React.LegacyRef<HTMLDivElement>
 }
 
-export default function Hero(
-  {
-    appName, observerRef,
-  }: HeroProps
-) {
+export default function Hero({ observerRef }: HeroProps) {
   const [search, setSearch] = useState('');
 
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
@@ -43,7 +39,8 @@ export default function Hero(
       id='home'
     >
       <div className='text-xl font-medium flex flex-col gap-10 py-10 items-center w-full'>
-        <p className="fluid-text self-start transition-transform text-blue-50 tracking-wide font-bold mobile:text-3xl">{appName}.</p>
+        
+        <PageHeader />
 
         <TypewriterEffect text="Enjoy your free audio books here." start="BEGIN" delay={0.4} />
       </div>

@@ -1,11 +1,10 @@
 import { useParams } from "react-router-dom"
-import { useAppContext } from "../hooks";
-import { AudioBookPlayer } from "../components/AudioBook";
+import { AudioBookPlayer, BookRecommendations } from "../components/AudioBook";
 import { AiOutlineHeart } from "react-icons/ai";
+import { PageHeader } from "../components";
 
 export default function BookPage() {
   const { bookId } = useParams();
-  const { appInfo } = useAppContext();
 
   const book = {
     id: '1',
@@ -19,9 +18,7 @@ export default function BookPage() {
     id={bookId}
     className='h-auto w-full flex flex-col px-10 maxMobile:px-5 py-8 gap-12'>
 
-      <p className="fluid-text self-start transition-transform text-blue-50 tracking-wide font-bold mobile:text-3xl">
-        {appInfo.name}.
-      </p>
+      <PageHeader />
 
       <div className="flex flex-col gap-6">
         <h1 className="capitalize text-center border-t-2 pt-2 text-3xl font-semibold">{book.author}</h1>
@@ -63,6 +60,8 @@ export default function BookPage() {
       </div>
 
       <AudioBookPlayer />
+
+      <BookRecommendations />
 
     </div>
   )

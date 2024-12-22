@@ -28,7 +28,7 @@ function App() {
         <Route path='/' element={<AppLayout />}>
           <Route index element={<Dashboard />} />
           <Route path=':bookId' element={<BookPage />} />
-          <Route path='post-audio' element={<PostAudioBook />} />
+          <Route path='post-audio-book' element={<PostAudioBook />} />
         </Route>
         
         <Route path='*' element={<PageNotFound />} />
