@@ -5,10 +5,12 @@ import { InitAudioBookState } from "../utils/initStates";
 import { nanoid } from "nanoid";
 import { Colors } from "../utils/colors";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function PostAudioBook() {
   const [audiobook, setAudiobook] = useState<AudioSchema>(InitAudioBookState);
   const [audioGenre, setAudioGenre] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const {
     author, thumbnail, title, note,
@@ -41,6 +43,7 @@ export default function PostAudioBook() {
       setAudiobook(InitAudioBookState);
       setAudioGenre([]);
       toast.success('Audio book uploaded');
+      navigate('/');
     } catch (err: any) {
       console.log(err.message);
       toast.error(err.message);
