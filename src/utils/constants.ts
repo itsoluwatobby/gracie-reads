@@ -31,3 +31,11 @@ export const chapters = [
   { id: '13', name: 'episode_13', link: 'https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav', duration: '600kb' },
   { id: '14', name: 'episode_14', link: 'https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav', duration: '600kb' },
 ];
+
+export const HTTPMethods = {
+  POST: 'POST',
+  GET: 'GET',
+  DELETE: 'DELETE',
+  PUT: 'PUT',
+  PATCH: 'PATCH',
+};

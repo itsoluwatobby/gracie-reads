@@ -12,6 +12,7 @@ import MediaSpeed from "./MediaSpeed";
 export default function AudioBookPlayer() {
   const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  // const slideRef = useRef<HTMLDivElement>();
 
   const chapterIds = chapters.map((chapter) => chapter.id);
   
@@ -47,10 +48,12 @@ export default function AudioBookPlayer() {
           <HoverButton
             Button={MdOutlineKeyboardArrowLeft}
             handleCLick={navigateChapters}
+            // handleCLick={scrollSlides}
             type='upward'
           />
           <HoverButton
             Button={MdOutlineKeyboardArrowRight}
+            // handleCLick={scrollSlides}
             handleCLick={navigateChapters}
             type='downward'
           />
@@ -59,6 +62,7 @@ export default function AudioBookPlayer() {
 
 
       <Chapters
+        // slideRef={slideRef as React.LegacyRef<HTMLDivElement>}
         chapters={chapters}
         chapterIds={chapterIds}
         currentChapter={currentChapter as Chapter}

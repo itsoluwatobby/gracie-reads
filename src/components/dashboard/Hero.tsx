@@ -3,7 +3,7 @@ import TypewriterEffect from "../TypewriterEffect";
 import { CiSearch } from 'react-icons/ci';
 import { FormEvent, useEffect, useState } from 'react';
 import SectionedCards from "./SectionedCards";
-import { dbStorage } from "../../firebase/Database";
+import { appService } from "../../app/appService";
 import toast from "react-hot-toast";
 import PageHeader from "../PageHeader";
 
@@ -22,9 +22,9 @@ export default function Hero({ observerRef }: HeroProps) {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const audios = await dbStorage.fetchAudios();
+        const audios = await appService.fetchAudios();
         console.log(audios);
-      } catch(err: any) {
+      } catch (err: any) {
         console.log(err.message);
         toast.error('Error fetching audio books');
       }
@@ -39,7 +39,7 @@ export default function Hero({ observerRef }: HeroProps) {
       id='home'
     >
       <div className='text-xl font-medium flex flex-col gap-10 py-10 items-center w-full'>
-        
+
         <PageHeader />
 
         <TypewriterEffect text="Enjoy your free audio books here." start="BEGIN" delay={0.4} />
@@ -50,11 +50,11 @@ export default function Hero({ observerRef }: HeroProps) {
           value={search}
           placeholder='what are you looking for...'
           onChange={e => setSearch(e.target.value)}
-          className='flex-auto focus:border-blue focus:outline-none placeholder:text-gray-400 px-4 py-2 rounded-sm text-black'
+          className='flex-auto focus:border-blue focus:outline-none placeholder:text-gray-400 px-4 py-2 maxMobile:h-12 rounded-sm text-black'
         />
-        <button 
-        type="submit"
-        className='flex-none bg-[#ff0b0b] grid place-content-center text-2xl p-2 px-3 midMobile:px-5 rounded'>
+        <button
+          type="submit"
+          className='flex-none bg-[#ff0b0b] grid place-content-center text-2xl p-2 px-3 midMobile:px-5 maxMobile:w-20 maxMobile:h-12 rounded'>
           <CiSearch />
         </button>
       </form>

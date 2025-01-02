@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 import { useAppContext } from "../../hooks";
 
 type ChaptersProps = {
@@ -7,6 +7,7 @@ type ChaptersProps = {
   currentChapter: Chapter;
   setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
   setCurrentChapter: React.Dispatch<React.SetStateAction<Chapter | null>>;
+  // slideRef: React.LegacyRef<HTMLDivElement>;
 }
 
 export default function Chapters(
@@ -19,7 +20,7 @@ export default function Chapters(
 
   const scrollIntoView = useCallback((node: HTMLElement) => {
     if (node && node.id === currentChapter?.id)
-      node.scrollIntoView({ behavior: 'smooth' });
+      node.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [currentChapter?.id]);
   
   const padNumber = (index: string) => index.padStart(2, '0');
