@@ -1,22 +1,22 @@
-const Chapter = {
-  id: '',
-  link: '',
-  name: '',
-  duration: '',
-}
+// const Chapter = {
+//   id: '',
+//   link: '',
+//   name: '',
+//   duration: '',
+// }
 
 export const InitAudioBookState: AudioSchema = {
-  id: '',
+  _id: '',
   thumbnail: '',
   author: '',
   about: '',
   createdAt: '',
   updatedAt: '', 
   genre: '',
-  chapters: [Chapter],
+  chapterId: '',
   title: '',
   isPublic: false,
-  dislikes: 0,
+  rating: 0,
   downloads: 0,
   note: '',
   likes: 0,

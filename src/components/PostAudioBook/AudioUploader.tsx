@@ -4,10 +4,9 @@ import { appService } from '../../app/appService';
 import toast from "react-hot-toast";
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { nanoid } from 'nanoid';
-import { helper } from '../../utils';
+import { CacheKeys, helper } from '../../utils';
 
 export default function AudioUploader() {
-  const sessionName = 'lovely-audios-session';
   const [file, setFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const { cacheData, getCachedData } = useLocalStorage();
@@ -33,10 +32,10 @@ export default function AudioUploader() {
   };
 
   useEffect(() => {
-    if (getCachedData(sessionName)) return;
+    if (getCachedData(CacheKeys.session)) return;
     const sessionId = nanoid();
     cacheData(
-      sessionName,
+      CacheKeys.session,
       {
         sessionId,
         timestamp: new Date().toUTCString(),
@@ -50,7 +49,7 @@ export default function AudioUploader() {
     const formData = new FormData();
     formData.append('audio', file);
     try {
-      const session = getCachedData<{ sessionId: string, timestamp: string }>(sessionName);
+      const session = getCachedData<{ sessionId: string, timestamp: string }>(CacheKeys.session);
       formData.append('sessionId', session.sessionId);
       formData.append('chapter', helper.stringifyData(audioInfo));
 

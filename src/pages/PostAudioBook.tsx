@@ -1,17 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { Genres, Input, PageHeader } from "../components";
 import { InitAudioBookState } from "../utils/initStates";
-import { nanoid } from "nanoid";
+// import { nanoid } from "nanoid";
 import { Colors } from "../utils/colors";
+import { CacheKeys } from "../utils/constants";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { appService } from "../app/appService";
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export default function PostAudioBook() {
   const [audiobook, setAudiobook] = useState<AudioSchema>(InitAudioBookState);
   const [audioGenre, setAudioGenre] = useState<string[]>([]);
   const navigate = useNavigate();
+  const { clearCache } = useLocalStorage()
   
   // create session whenever page is visited
 
@@ -47,7 +50,7 @@ export default function PostAudioBook() {
       console.log(audio);
 
       setAudiobook(InitAudioBookState);
-      clearCache(sessionName);
+      clearCache(CacheKeys.session);
       setAudioGenre([]);
       toast.success('Audio book uploaded');
       navigate('/');
