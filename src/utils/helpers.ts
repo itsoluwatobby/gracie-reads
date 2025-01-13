@@ -32,12 +32,21 @@ class Helper {
     }).format(new Date(date));
   }
 
-  jsonParseValue = <T>(value: string): T => {
+  public jsonParseValue<T>(value: string): T {
     try {
       return JSON.parse(value) as T;
     } catch(err) {
       void(err);
       return value as T;
+    }
+  }
+  
+  public stringifyData<T>(data: T): string {
+    try {
+      return JSON.stringify(data);
+    } catch(err) {
+      void(err);
+      return data as string;
     }
   }
 

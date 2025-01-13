@@ -1,7 +1,7 @@
 import React from 'react'
 import { ModalTags,  } from '../utils';
 import NavButtons from './Navs';
-import ResumeButton from './Button';
+import ChannelButton from './Button';
 import Logo from './Logo';
 import { Link } from 'react-router-dom';
 
@@ -30,7 +30,7 @@ export default function Header({ appName, setToggle }: HeaderProps) {
             />
           ))
         }
-        <ResumeButton />
+        <ChannelButton />
       </ul>
 
       <button

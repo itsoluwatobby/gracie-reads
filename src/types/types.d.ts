@@ -49,24 +49,49 @@ type ArrowButton = {
 }
 
 type Chapter = {
-  id: string;
-  link: string;
-  name: string;
+  _id: string;
+  sessionId: string;
+  audioId: string;
+  chapters: Episode[],
+  createdAt: string;
+  updatedAt: string;
+}
+
+type Episode = {
+  _id: string;
+  episode: number;
+  filename: string;
   duration: string;
 }
 
+type ResponseData<DATA> = {
+  timestamp: string;
+  message: string;
+  statusCode: number;
+  data: DATA
+}
+
+type ErrorResponse = {
+  timestamp: string;
+  error: {
+    statusCode: number;
+    success: boolean;
+    message: string;
+  }
+}
+
 interface AudioSchema {
-  id?: string;
+  _id?: string;
   thumbnail: string;
   author: string;
   about?: string;
   createdAt: string;
   updatedAt: string; 
   genre: string;
-  chapters: Chapter[];
+  chapterId: string;
   title: string;
   isPublic: boolean;
-  dislikes?: number
+  rating?: number
   downloads?: number;
   note?: string;
   likes?: number;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { hoverEffects } from '../utils';
 import { Link } from 'react-router-dom';
+import { BASE_URL } from '../app/app.config';
 
 type BookCardProps = {
   thumbnail: string;
@@ -30,7 +31,7 @@ export default function BookCard(
       <figure className='bg-gray-700 rounded-md w-full h-[80%]'>
         {
           thumbnail ?
-          <img src={thumbnail} alt={title} 
+          <img src={`${BASE_URL}/${thumbnail}`} alt={title} loading='lazy' 
           className='w-full rounded-md h-full object-cover'
           />
           : null

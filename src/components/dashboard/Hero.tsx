@@ -4,15 +4,23 @@ import { CiSearch } from 'react-icons/ci';
 import { FormEvent, useEffect, useState } from 'react';
 import SectionedCards from "./SectionedCards";
 import { appService } from "../../app/appService";
-import toast from "react-hot-toast";
 import PageHeader from "../PageHeader";
+import { RecentDuration } from "../../utils";
+import { asyncFunction } from "../../app/app.config";
 
 type HeroProps = {
   observerRef: React.LegacyRef<HTMLDivElement>
 }
 
+type AudioTypes = {
+  recent: AudioSchema[];
+  featured: AudioSchema[];
+}
 export default function Hero({ observerRef }: HeroProps) {
   const [search, setSearch] = useState('');
+  const [audios, setAudios] = useState<AudioTypes>(
+    { recent: [], featured: [] }
+  );
 
   const handleSearch = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -20,16 +28,14 @@ export default function Hero({ observerRef }: HeroProps) {
   }
 
   useEffect(() => {
-    const fetch = async () => {
-      try {
-        const audios = await appService.fetchAudios();
-        console.log(audios);
-      } catch (err: any) {
-        console.log(err.message);
-        toast.error('Error fetching audio books');
-      }
-    }
-    fetch();
+    asyncFunction(async () => {
+      const audioData = await appService.fetchAudios();
+      const data = audioData.data.docs;
+      const sortedAudios =  data?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
+      const recent = sortedAudios.filter((audio) => new Date(audio.createdAt).getTime() >= RecentDuration);
+      setAudios({ recent, featured: sortedAudios });
+    });
   }, [])
 
   return (
@@ -50,17 +56,17 @@ export default function Hero({ observerRef }: HeroProps) {
           value={search}
           placeholder='what are you looking for...'
           onChange={e => setSearch(e.target.value)}
-          className='flex-auto focus:border-blue focus:outline-none placeholder:text-gray-400 px-4 py-2 maxMobile:h-12 rounded-sm text-black'
+          className='flex-auto focus:border-blue focus:outline-none placeholder:text-gray-400 px-4 text-sm py-2 maxMobile:h-12 rounded-sm text-black'
         />
         <button
           type="submit"
-          className='flex-none bg-[#ff0b0b] grid place-content-center text-2xl p-2 px-3 midMobile:px-5 maxMobile:w-20 maxMobile:h-12 rounded'>
+          className='flex-none bg-[#ff0b0b] grid place-content-center text-2xl p-2 h-9 px-3 midMobile:px-5 maxMobile:w-20 maxMobile:h-12 rounded'>
           <CiSearch />
         </button>
       </form>
 
-      <SectionedCards sectionTitle='Recent Audiobooks' />
-      <SectionedCards sectionTitle='Featured Audiobooks' />
+      <SectionedCards sectionTitle='Recent Audiobooks' audios={audios.recent} />
+      <SectionedCards sectionTitle='Featured Audiobooks' audios={audios.featured} />
 
     </section>
   )

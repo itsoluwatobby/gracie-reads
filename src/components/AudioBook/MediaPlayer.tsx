@@ -3,67 +3,86 @@ import { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../../hooks";
 import { CgPlayButton, CgPlayPause } from "react-icons/cg";
 import { IoReload } from "react-icons/io5";
+import { STREAM_URI } from "../../app/app.config";
+import toast from "react-hot-toast";
+import ProgressBar from "./ProgressBar";
 
 type MediaPlayerProps = {
-  currentChapter: Chapter;
+  episode: Episode;
 }
 
-export default function MediaPlayer({ currentChapter }: MediaPlayerProps) {
+export default function MediaPlayer({ episode }: MediaPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [countUpTime, setCountUpTime] = useState('00:00');
   const [mediaLength, setMediaLength] = useState('00:00');
-  const [mediaProgress, setMediaProgress] = useState('w-[0%]');
-  const [audioLength, setAudioLength] = useState(0);
+  // const [mediaProgress, setMediaProgress] = useState('w-[0%]');
+  // const [audioLength, setAudioLength] = useState(0);
   const { mediaPlayer, setMediaPlayer, deactivatePlayer } = useAppContext()
   const { startPlayer, audioSource } = mediaPlayer;
 
-  
   const handleTimeUpdate = () => {
     if (audioRef.current && audioSource && startPlayer) {
       const currentTimeInSeconds = audioRef.current.currentTime;
       const minutes = Math.floor(currentTimeInSeconds / 60);
       const seconds = Math.floor(currentTimeInSeconds % 60);
       setCountUpTime(`${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`);
-      const progress = Math.ceil((currentTimeInSeconds / audioLength) * 100);
-      // console.log({ progress, audioLength })
-      setMediaProgress(`w-[${progress}%]`);
+      // const progress = ((currentTimeInSeconds / audioLength) * 100);
+      // setMediaProgress(`w-[${progress}%]`);
     }
   };
-
+  // console.log(mediaProgress)
   useEffect(() => {
-    audioRef.current?.addEventListener('ended', deactivatePlayer);
+    audioRef.current?.addEventListener('error', (e) => {
+      console.log(e.error)
+      toast.error(`Error loading chapter: ${e.message}`);
+    });
+    // audioRef.current?.addEventListener('ended', deactivatePlayer);
+
+    audioRef.current?.addEventListener('canplay', () => {
+      audioRef.current?.play();
+      setMediaPlayer((prev) => (
+        { ...prev, audioPaused: false, startPlayer: true }
+      ));
+    })
 
     return () => {
       if (audioRef.current) {
         audioRef.current.removeEventListener('ended', deactivatePlayer);
+        audioRef.current.removeEventListener('canplay', () => {
+          audioRef.current?.play();
+          setMediaPlayer((prev) => (
+            { ...prev, audioPaused: false, startPlayer: true }
+          ));
+        });
+        audioRef.current?.removeEventListener('error', (e) => {
+          console.log(e)
+          toast.error('Error loading chapter');
+        });
       }
     };
   }, []);
 
-  // console.log(audioLength)
-  // console.log(mediaProgress)
+  const restartAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play();
+    }
+  }
 
   useEffect(() => {
     if (!startPlayer || !audioSource || !audioRef.current) return;
     const handleMetadataLoaded = () => {
       if (audioRef?.current) {
-        console.log('ALWAYS LOADING');
         const durationInSeconds = audioRef.current.duration;
         const minutes = Math.floor(durationInSeconds / 60);
         const seconds = Math.floor(durationInSeconds % 60);
         const formattedDuration = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         setMediaLength(formattedDuration ?? '00:00');
-        // console.log({ durationInSeconds })
-        setAudioLength(durationInSeconds);
+        // setAudioLength(durationInSeconds);
       }
     };
     audioRef.current.addEventListener('canplaythrough', handleMetadataLoaded);
     audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
-
-    // Optionally, you might want to check for loading progress or other states:
-// audio.addEventListener('loadstart', function() { console.log('Audio loading started'); });
-// audio.addEventListener('progress', function() { console.log('Audio loading in progress'); });
-// audio.addEventListener('error', function() { console.log('An error occurred while loading the audio'); });
 
     return () => {
       if (audioRef.current) {
@@ -74,9 +93,9 @@ export default function MediaPlayer({ currentChapter }: MediaPlayerProps) {
   }, [audioSource, startPlayer, audioRef, setMediaPlayer]);
 
   const audioTrigger = (play: boolean) => {
-    if (!audioRef.current || !audioSource || !currentChapter.link) return;
-    if (play && currentChapter.link && !audioSource) {
-      const link = currentChapter.link;
+    if (!audioRef.current || !audioSource || !episode.filename) return;
+    if (play && episode.filename && !audioSource) {
+      const link = `${STREAM_URI}/${episode.filename}`;
       audioRef.current.src = link;
       setMediaPlayer(prev => ({ ...prev, audioSource: link }))
     }
@@ -87,7 +106,7 @@ export default function MediaPlayer({ currentChapter }: MediaPlayerProps) {
       ));
     }
     else {
-      if (currentChapter?.link) {
+      if (episode?.filename) {
         audioRef.current.play();
         setMediaPlayer((prev) => (
           { ...prev, audioPaused: false, startPlayer: true }
@@ -99,21 +118,17 @@ export default function MediaPlayer({ currentChapter }: MediaPlayerProps) {
   return (
     <div className='flex flex-col items-center gap-3 rounded p-2 text-2xl bg-slate-400'>
       {/* media stream */}
-      <div className="relative duration-300 transition-transform h-[6px] w-full bg-slate-500 rounded-md">
+      {/* <div className="relative duration-300 transition-transform h-[6px] w-full bg-slate-500 rounded-md">
         <div className={`absolute h-[6px] ${mediaProgress} bg-slate-700 rounded-md`}></div>
-      </div>
+      </div> */}
+      <ProgressBar />
 
       <div className="px-2 flex items-center justify-between w-full">
 
         <div className="flex items-center gap-3">
           <IoReload
             title="Restart"
-            onClick={() => {
-              if (audioRef.current) {
-                audioRef.current.currentTime = 0;
-                audioRef.current.play();
-              }
-            }}
+            onClick={restartAudio}
             className="text-xl text-black cursor-pointer active:rotate-[180deg] transition-transform"
           />
           <div

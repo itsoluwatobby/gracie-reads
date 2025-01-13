@@ -1,21 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Genres, Input, PageHeader } from "../components";
 import { InitAudioBookState } from "../utils/initStates";
 import { nanoid } from "nanoid";
 import { Colors } from "../utils/colors";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { appService } from "../app/appService";
 
 export default function PostAudioBook() {
   const [audiobook, setAudiobook] = useState<AudioSchema>(InitAudioBookState);
   const [audioGenre, setAudioGenre] = useState<string[]>([]);
   const navigate = useNavigate();
+  
+  // create session whenever page is visited
 
   const {
     author, thumbnail, title, note,
     // reference, chapters,
   } = audiobook;
+
+  // const handleFileUpload = async () => {
+  //   try {
+  //     const session = getCachedData<{ sessionId: string, timestamp: string }>(sessionName);
+  //   } catch (err: any) {
+  //     console.log(err.message);
+  //     toast.error(err.message);
+  //   }
+  // }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const [name, value] = [e.target.name, e.target.value];
@@ -28,19 +40,14 @@ export default function PostAudioBook() {
       const genres = audioGenre.join(',');
       const newAudio = {
         ...audiobook,
-        id: nanoid(),
         genre: genres,
-        views: 0,
-        likes: 0,
-        disLikes: 0,
-        downloads: 0,
         isPublic: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
       };
-      console.log(newAudio)
+      const audio = await appService.createAudio(newAudio);
+      console.log(audio);
 
       setAudiobook(InitAudioBookState);
+      clearCache(sessionName);
       setAudioGenre([]);
       toast.success('Audio book uploaded');
       navigate('/');

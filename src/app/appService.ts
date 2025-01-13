@@ -1,10 +1,11 @@
+import { AxiosProgressEvent } from "axios";
 import { appRequest } from "./app.config";
-import { Paths } from "./path.resource";
+import { ChapterPaths, Paths } from "./path.resource";
 
 class AppService {
   async createAudio(newAudio: AudioSchema) {
     try {
-      const result = await appRequest(Paths.create.endpoint, newAudio);
+      const result = await appRequest<unknown, ResponseData<AudioSchema>>(Paths.create.endpoint, newAudio);
       // console.log("Document written with ID: ", docRef.id);
       return result.data;
     } catch (e) {
@@ -13,10 +14,20 @@ class AppService {
   }
 
   async getAudio(id: string) {
-    const result = await appRequest(
+    const result = await appRequest<unknown, ResponseData<AudioSchema>>(
       `${Paths.getAudio.endpoint}/${id}`,
       {},
       Paths.getAudio.method,
+    );
+
+    return result.data;
+  }
+  
+  async getAudioChapterById(id: string) {
+    const result = await appRequest<unknown, ResponseData<Chapter>>(
+      `${ChapterPaths.getChapterById.endpoint}/${id}`,
+      {},
+      ChapterPaths.getChapterById.method,
     );
 
     return result.data;
@@ -30,18 +41,29 @@ class AppService {
     // await deleteDoc(doc(this.AudioSchemaDB, this.audioSchema, id));
   // } 
 
-  async fetchAudios(): Promise<AudioSchema[]> {
-    const result = await appRequest<unknown, AudioSchema[]>(
+  async fetchAudios() {
+    const result = await appRequest<unknown, ResponseData<{ docs: AudioSchema[] }>>(
       Paths.getAllAudios.endpoint,
       {},
       Paths.getAllAudios.method,
     );
 
-    return result.data
+    return result.data;
   }
 
-  async uploadAudio<M>(file: M) {
-    const result = await appRequest<M, unknown>(Paths.upload.endpoint, file);
+  async uploadAudio(formdata: FormData, setUploadProgress: React.Dispatch<React.SetStateAction<number>>) {
+    const uploadProgress = (progressEvent: AxiosProgressEvent) => {
+      const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total!);
+      setUploadProgress(percentCompleted);
+    };
+    const result = await appRequest<FormData, unknown>(
+      Paths.upload.endpoint,
+      formdata,
+      Paths.upload.endpoint,
+      'json',
+      {},
+      uploadProgress,
+    );
 
     return result.data
   }

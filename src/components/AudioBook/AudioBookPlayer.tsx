@@ -1,6 +1,5 @@
-import { chapters } from "../../utils";
 import HoverButton from "./HoverButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
@@ -8,17 +7,63 @@ import {
 import Chapters from "./Chapters";
 import MediaPlayer from "./MediaPlayer";
 import MediaSpeed from "./MediaSpeed";
+import { useAppContext } from "../../hooks";
+import { appService } from "../../app/appService";
+import { asyncFunction, STREAM_URI } from "../../app/app.config";
+import toast from "react-hot-toast";
 
-export default function AudioBookPlayer() {
-  const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
+type AudioBookPlayerProps = {
+  chapterId: string;
+}
+export default function AudioBookPlayer({ chapterId }: AudioBookPlayerProps) {
+  const [episode, setEpisode] = useState<Episode | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  // const slideRef = useRef<HTMLDivElement>();
+  const { deactivatePlayer, setMediaPlayer } = useAppContext()
+  const [chapter, setChapter] = useState<Chapter>();
+  const [episodeLength, setEpisodeLength] = useState<number>();
 
-  const chapterIds = chapters.map((chapter) => chapter.id);
+  useEffect(() => {
+    if (!chapterId) return;
+    asyncFunction(async () => {
+      const chapter = await appService.getAudioChapterById(chapterId);
+      setChapter(chapter.data);
+      setEpisodeLength(chapter.data.chapters.length);
+    });
+  }, [chapterId])
+
+  const chapterIds = chapter?.chapters.map((chapter) => chapter.episode);
   
+  useEffect(() => {
+    const audio = document.getElementById('audioRef') as HTMLAudioElement;
+    async function playNextChapter() {
+      const length = chapterIds!.length;
+      const nextIndex = (chapterIds as number[]).indexOf((episode!).episode) + 1;
+      if (length === nextIndex) {
+        toast.success(
+          'End of chapter. Thank you for listening✌️',
+          { duration: 10000 },
+        );
+        deactivatePlayer();
+      } else {
+        const nextEpisode = chapter!.chapters[nextIndex]
+        toast.success(`Up Next Episode ${nextEpisode.episode}`, { duration: 5000 });
+        setCurrentIndex(nextIndex);
+        setEpisode(nextEpisode)
+        setMediaPlayer((prev) => ({ ...prev, audioSource: `${STREAM_URI}/${nextEpisode.filename}` }));
+      }
+    }
+
+    audio?.addEventListener('ended', playNextChapter);
+
+    return () => {
+      audio?.removeEventListener('ended', playNextChapter);
+    }
+  }, [chapterIds, episode, chapter, deactivatePlayer, setMediaPlayer])
+      
+
   const navigateChapters = (type: ArrowDirection) => {
     let index = currentIndex;
-    const chapterLength = chapters.length - 1;
+    const chapterLength = episodeLength! - 1;
     if (type === 'downward' && currentIndex >= chapterLength) index = 0;
     else if (type === 'upward' && currentIndex <= 0) index = chapterLength;
     else {
@@ -26,34 +71,32 @@ export default function AudioBookPlayer() {
       else index += 1;
     }
     setCurrentIndex(index);
-    const chapterId = chapterIds[index];
-    const audio = chapters.find((chapter) => chapter.id === chapterId);
-    setCurrentChapter(audio ?? null);
+    const chapterId = (chapterIds!)[index];
+    const audio = chapter?.chapters?.find((chapter) => chapter.episode === chapterId);
+    setEpisode(audio!);
   }
 
   return (
     <div className="flex flex-col text-sm gap-8 h-auto rounded">
 
       <section className="self-center flex flex-col gap-5 rounded md:w-1/2">
-        <span className="self-center">{currentChapter?.name ?? '----- -------'}</span>
+        <span className="self-center">{episode?.filename ?? '----- -------'}</span>
 
         <MediaSpeed />
 
         {/* <MediaPlayer /> */}
         <MediaPlayer
-          currentChapter={currentChapter as Chapter}
+          episode={episode!}
         />
 
         <div className="self-center flex items-center gap-6">
           <HoverButton
             Button={MdOutlineKeyboardArrowLeft}
             handleCLick={navigateChapters}
-            // handleCLick={scrollSlides}
             type='upward'
           />
           <HoverButton
             Button={MdOutlineKeyboardArrowRight}
-            // handleCLick={scrollSlides}
             handleCLick={navigateChapters}
             type='downward'
           />
@@ -63,10 +106,10 @@ export default function AudioBookPlayer() {
 
       <Chapters
         // slideRef={slideRef as React.LegacyRef<HTMLDivElement>}
-        chapters={chapters}
-        chapterIds={chapterIds}
-        currentChapter={currentChapter as Chapter}
-        setCurrentChapter={setCurrentChapter}
+        episodes={chapter?.chapters as Episode[]}
+        chapterIds={chapterIds!}
+        episode={episode!}
+        setEpisode={setEpisode}
         setCurrentIndex={setCurrentIndex}
       />
 

@@ -1,25 +1,42 @@
 import { HTTPMethods } from "../utils";
 
-const BasePath = 'api/v1';
+const AudioBasePath = 'api/v1/audio';
+
 export const Paths = {
   create: {
-    endpoint: `${BasePath}/create`,
+    endpoint: `${AudioBasePath}/create`,
     method: HTTPMethods.POST,
   },
   upload: {
-    endpoint: `${BasePath}/upload`,
+    endpoint: `${AudioBasePath}/upload`,
     method: HTTPMethods.POST,
   },
   getAudio: {
-    endpoint: `${BasePath}/file`,
+    endpoint: `${AudioBasePath}/file`,
     method: HTTPMethods.GET,
   },
   getAllAudios: {
-    endpoint: `${BasePath}/`,
+    endpoint: `${AudioBasePath}/`,
     method: HTTPMethods.GET,
   },
   stream: {
-    endpoint: `${BasePath}/stream`,
+    endpoint: `${AudioBasePath}/stream`,
+    method: HTTPMethods.POST,
+  },
+};
+
+const ChapterBasePath = 'api/v1/chapter';
+export const ChapterPaths = {
+  getChapterBySession: {
+    endpoint: `${ChapterBasePath}/stream`,
+    method: HTTPMethods.GET,
+  },
+  getChapterById: {
+    endpoint: `${ChapterBasePath}`,
+    method: HTTPMethods.GET,
+  },
+  removeChapter: {
+    endpoint: `${ChapterBasePath}/remove`,
     method: HTTPMethods.POST,
   },
 };
