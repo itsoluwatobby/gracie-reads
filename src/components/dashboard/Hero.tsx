@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import TypewriterEffect from "../TypewriterEffect";
+ import TypewriterEffect from "../TypewriterEffect";
 import { CiSearch } from 'react-icons/ci';
 import { FormEvent, useEffect, useState } from 'react';
 import SectionedCards from "./SectionedCards";
 import { appService } from "../../app/appService";
 import PageHeader from "../PageHeader";
 import { RecentDuration } from "../../utils";
-import { asyncFunction } from "../../app/app.config";
+import toast from "react-hot-toast";
+import { useAppContext } from "../../hooks";
 
 type HeroProps = {
-  observerRef: React.LegacyRef<HTMLDivElement>
+  observerRef: React.LegacyRef<HTMLDivElement>;
 }
 
 type AudioTypes = {
@@ -18,6 +19,9 @@ type AudioTypes = {
 }
 export default function Hero({ observerRef }: HeroProps) {
   const [search, setSearch] = useState('');
+  const [retries, setRetries] = useState(0);
+  const { isServerOnline } = useAppContext();
+  // const [isLoading, setIsLoading] = useState(false);
   const [audios, setAudios] = useState<AudioTypes>(
     { recent: [], featured: [] }
   );
@@ -28,15 +32,29 @@ export default function Hero({ observerRef }: HeroProps) {
   }
 
   useEffect(() => {
-    asyncFunction(async () => {
-      const audioData = await appService.fetchAudios();
-      const data = audioData.data.docs;
-      const sortedAudios =  data?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-
-      const recent = sortedAudios.filter((audio) => new Date(audio.createdAt).getTime() >= RecentDuration);
-      setAudios({ recent, featured: sortedAudios });
-    });
-  }, [])
+    if (!isServerOnline) return;
+    (async () => {
+      // setIsLoading(true);
+      if (retries >= 5) return;
+      try {
+        const audioData = await appService.fetchAudios();
+        const data = audioData.data.docs;
+        const sortedAudios =  data?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  
+        const recent = sortedAudios.filter((audio) => new Date(audio.createdAt).getTime() >= RecentDuration);
+        setAudios({ recent, featured: sortedAudios });
+        setRetries(0)
+      } catch (err: unknown) {
+        setRetries((prev) => prev + 1);
+        const error = err as any;
+        const message = error.response?.data?.error?.message || error?.message;
+        toast.error(message);
+      }
+      // finally {
+      //   setIsLoading(false)
+      // }
+    })()
+  }, [retries, isServerOnline])
 
   return (
     <section
@@ -56,7 +74,7 @@ export default function Hero({ observerRef }: HeroProps) {
           value={search}
           placeholder='what are you looking for...'
           onChange={e => setSearch(e.target.value)}
-          className='flex-auto focus:border-blue focus:outline-none placeholder:text-gray-400 px-4 text-sm py-2 maxMobile:h-12 rounded-sm text-black'
+          className='flex-auto focus:border-blue focus:outline-none placeholder:text-gray-400 px-4 text-sm py-2 maxMobile:h-12 rounded-sm text-black w-full'
         />
         <button
           type="submit"

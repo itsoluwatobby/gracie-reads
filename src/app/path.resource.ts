@@ -19,9 +19,9 @@ export const Paths = {
     endpoint: `${AudioBasePath}/`,
     method: HTTPMethods.GET,
   },
-  stream: {
-    endpoint: `${AudioBasePath}/stream`,
-    method: HTTPMethods.POST,
+  delete: {
+    endpoint: `${AudioBasePath}/delete`,
+    method: HTTPMethods.DELETE,
   },
 };
 
@@ -38,5 +38,17 @@ export const ChapterPaths = {
   removeChapter: {
     endpoint: `${ChapterBasePath}/remove`,
     method: HTTPMethods.POST,
+  },
+};
+
+const AppConfigBasePath = 'api/v1/config';
+export const AppConfigPaths = {
+  getAppConfig: {
+    endpoint: `${AppConfigBasePath}/`,
+    method: HTTPMethods.GET,
+  },
+  updateAppConfig: {
+    endpoint: `${AppConfigBasePath}/`,
+    method: HTTPMethods.PUT,
   },
 };

@@ -5,7 +5,7 @@ import { CgPlayButton, CgPlayPause } from "react-icons/cg";
 import { IoReload } from "react-icons/io5";
 import { STREAM_URI } from "../../app/app.config";
 import toast from "react-hot-toast";
-import ProgressBar from "./ProgressBar";
+// import ProgressBar from "./ProgressBar";
 
 type MediaPlayerProps = {
   episode: Episode;
@@ -15,8 +15,8 @@ export default function MediaPlayer({ episode }: MediaPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [countUpTime, setCountUpTime] = useState('00:00');
   const [mediaLength, setMediaLength] = useState('00:00');
-  // const [mediaProgress, setMediaProgress] = useState('w-[0%]');
-  // const [audioLength, setAudioLength] = useState(0);
+  const [mediaProgress, setMediaProgress] = useState('w-[0%]');
+  const [audioLength, setAudioLength] = useState(0);
   const { mediaPlayer, setMediaPlayer, deactivatePlayer } = useAppContext()
   const { startPlayer, audioSource } = mediaPlayer;
 
@@ -26,36 +26,34 @@ export default function MediaPlayer({ episode }: MediaPlayerProps) {
       const minutes = Math.floor(currentTimeInSeconds / 60);
       const seconds = Math.floor(currentTimeInSeconds % 60);
       setCountUpTime(`${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`);
-      // const progress = ((currentTimeInSeconds / audioLength) * 100);
-      // setMediaProgress(`w-[${progress}%]`);
+      const progress = ((currentTimeInSeconds / audioLength) * 100).toFixed(0);
+      setMediaProgress(`w-[${progress}%]`);
     }
   };
   // console.log(mediaProgress)
   useEffect(() => {
-    audioRef.current?.addEventListener('error', (e) => {
-      console.log(e.error)
-      toast.error(`Error loading chapter: ${e.message}`);
-    });
+    if (audioRef.current?.src?.includes('stream')) {
+      audioRef.current?.addEventListener('error', (e) => {
+        console.log(e)
+        toast.error(`Error loading chapter: ${e.message}`);
+      });
+    }
     // audioRef.current?.addEventListener('ended', deactivatePlayer);
 
-    audioRef.current?.addEventListener('canplay', () => {
+    const canPlay = () => {
       audioRef.current?.play();
       setMediaPlayer((prev) => (
         { ...prev, audioPaused: false, startPlayer: true }
       ));
-    })
+    }
+    audioRef.current?.addEventListener('canplay', canPlay);
 
     return () => {
       if (audioRef.current) {
         audioRef.current.removeEventListener('ended', deactivatePlayer);
-        audioRef.current.removeEventListener('canplay', () => {
-          audioRef.current?.play();
-          setMediaPlayer((prev) => (
-            { ...prev, audioPaused: false, startPlayer: true }
-          ));
-        });
+        audioRef.current.removeEventListener('canplay', canPlay);
         audioRef.current?.removeEventListener('error', (e) => {
-          console.log(e)
+          console.log(e.error)
           toast.error('Error loading chapter');
         });
       }
@@ -78,7 +76,7 @@ export default function MediaPlayer({ episode }: MediaPlayerProps) {
         const seconds = Math.floor(durationInSeconds % 60);
         const formattedDuration = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         setMediaLength(formattedDuration ?? '00:00');
-        // setAudioLength(durationInSeconds);
+        setAudioLength(durationInSeconds);
       }
     };
     audioRef.current.addEventListener('canplaythrough', handleMetadataLoaded);
@@ -118,11 +116,11 @@ export default function MediaPlayer({ episode }: MediaPlayerProps) {
   return (
     <div className='flex flex-col items-center gap-3 rounded p-2 text-2xl bg-slate-400'>
       {/* media stream */}
-      {/* <div className="relative duration-300 transition-transform h-[6px] w-full bg-slate-500 rounded-md">
-        <div className={`absolute h-[6px] ${mediaProgress} bg-slate-700 rounded-md`}></div>
-      </div> */}
-      <ProgressBar />
-
+      <div className="relative duration-300 transition-transform h-[6px] w-full bg-slate-500 rounded-md">
+        <div className={`absolut h-[6px] ${mediaProgress} bg-slate-800 rounded-md`}></div>
+      </div>
+      {/* <ProgressBar mediaProgress={mediaProgress} /> */}
+      
       <div className="px-2 flex items-center justify-between w-full">
 
         <div className="flex items-center gap-3">

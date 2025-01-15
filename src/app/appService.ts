@@ -1,16 +1,15 @@
 import { AxiosProgressEvent } from "axios";
 import { appRequest } from "./app.config";
-import { ChapterPaths, Paths } from "./path.resource";
+import { AppConfigPaths, ChapterPaths, Paths } from "./path.resource";
 
 class AppService {
-  async createAudio(newAudio: AudioSchema) {
-    try {
-      const result = await appRequest<unknown, ResponseData<AudioSchema>>(Paths.create.endpoint, newAudio);
-      // console.log("Document written with ID: ", docRef.id);
-      return result.data;
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
+  async createAudio(formdata: FormData) {
+    const result = await appRequest<FormData, ResponseData<AudioSchema>>(
+      Paths.create.endpoint,
+      formdata,
+      Paths.create.method,
+    );
+    return result.data;
   }
 
   async getAudio(id: string) {
@@ -33,6 +32,26 @@ class AppService {
     return result.data;
   }
   
+  async getAudioChapterBySession(session: string) {
+    const result = await appRequest<unknown, ResponseData<Chapter>>(
+      `${ChapterPaths.getChapterBySession.endpoint}/${session}`,
+      {},
+      ChapterPaths.getChapterBySession.method,
+    );
+
+    return result.data;
+  }
+
+  async removeEpisode(sessionId: string, episodeId: string) {
+    const result = await appRequest<unknown, ResponseData<Chapter>>(
+      `${ChapterPaths.removeChapter.endpoint}`,
+      { sessionId, episodeId },
+      ChapterPaths.removeChapter.method,
+    );
+
+    return result.data;
+  }
+  
   // updateAudio(id: string, update: Partial<AudioSchema>) {
 
   // }
@@ -50,29 +69,50 @@ class AppService {
 
     return result.data;
   }
+  
+  async deleteAudio(audioId: string) {
+    const result = await appRequest<unknown, ResponseData<AudioSchema>>(
+      `${Paths.delete.endpoint}/${audioId}`,
+      {},
+      Paths.delete.method,
+    );
+
+    return result.data;
+  }
 
   async uploadAudio(formdata: FormData, setUploadProgress: React.Dispatch<React.SetStateAction<number>>) {
     const uploadProgress = (progressEvent: AxiosProgressEvent) => {
       const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total!);
       setUploadProgress(percentCompleted);
     };
-    const result = await appRequest<FormData, unknown>(
+    const result = await appRequest<FormData, ResponseData<Chapter>>(
       Paths.upload.endpoint,
       formdata,
-      Paths.upload.endpoint,
+      Paths.upload.method,
       'json',
       {},
       uploadProgress,
+      { 'Content-Type': 'multipart/form-data' },
+    );
+
+    return result.data;
+  }
+
+  async getAppConfig() {
+    const result = await appRequest<unknown, ResponseData<AppConfig>>(
+      AppConfigPaths.getAppConfig.endpoint,
+      {},
+      AppConfigPaths.getAppConfig.method,
     );
 
     return result.data
   }
 
-  async streamAudio(fileName: string) {
-    const result = await appRequest<unknown, unknown>(
-      `${Paths.stream.endpoint}/${fileName}`,
+  async updateAppConfig() {
+    const result = await appRequest<Partial<AppConfig>, ResponseData<AppConfig>>(
+      AppConfigPaths.updateAppConfig.endpoint,
       {},
-      Paths.stream.method,
+      AppConfigPaths.updateAppConfig.method,
     );
 
     return result.data

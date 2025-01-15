@@ -4,10 +4,11 @@ type ScrollDirection = 'left' | 'right'
 
 type Theme = 'light' | 'dark'
 type AppContextProps = {
-  appInfo: { name: string, email: string, workPlace: string };
+  appInfo: Partial<AppConfig>;
   theme: Theme;
-  toggleModal: boolean;
   mediaPlayer: MediaPlayerProp;
+  toggleModal: boolean;
+  isServerOnline: boolean;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
   setToggleModal: React.Dispatch<React.SetStateAction<boolean>>;
   setMediaPlayer: React.Dispatch<React.SetStateAction<MediaPlayerProp>>;
@@ -72,11 +73,15 @@ type ResponseData<DATA> = {
 }
 
 type ErrorResponse = {
-  timestamp: string;
-  error: {
-    statusCode: number;
-    success: boolean;
-    message: string;
+  response: {
+    data: {
+      timestamp: string;
+      error: {
+        statusCode: number;
+        success: boolean;
+        message: string;
+      }
+    }
   }
 }
 
@@ -100,4 +105,21 @@ interface AudioSchema {
     siteName: string;
     link: string;
   };
+}
+
+type AppConfig = {
+  _id: string,
+  name: string,
+  appId: string,
+  email: string,
+  channel: string,
+  genres: string[],
+  createdAt: string,
+  updatedAt: string,
+}
+
+type SESSION = { sessionId: string, timestamp: string }
+type LoadingStates = {
+  isLoading: boolean;
+  fileLoading: boolean;
 }

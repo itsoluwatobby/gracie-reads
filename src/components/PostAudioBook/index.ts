@@ -1,6 +1,6 @@
 import Genres from "./Genres";
 import Input from "./Input";
-export * from './AudioUploader';
+export * from './ChapterUploader';
 
 export {
   Input,

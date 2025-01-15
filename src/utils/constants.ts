@@ -8,11 +8,12 @@ export const hoverEffects = [
 ];
 
 export const AudioSpeeds = {
+  '0.75x': 0.75,
   Normal: 1,
   '1.25x': 1.25,
   '1.5x': 1.5,
   '1.75x': 1.75,
-  '2x': 2
+  '2x': 2,
 };
 
 export const RecentDuration = 5 * 24 * 60 * 60 * 1000; // 5 days ago

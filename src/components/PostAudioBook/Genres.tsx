@@ -1,14 +1,15 @@
 import React from 'react'
 import { LiaTimesSolid } from 'react-icons/lia';
+import { useAppContext } from '../../hooks';
 
 type GenresProps = {
   audioGenre: string[];
   setAudioGenre: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const genres = ['romance', 'fantasy', 'adventure', 'sci-fi', 'dark-romance'];
-
 export default function Genres({ audioGenre, setAudioGenre }: GenresProps) {
+  const { appInfo } = useAppContext();
+
   return (
     <article className="flex flex-col">
       <div className="flex flex-col">
@@ -36,7 +37,7 @@ export default function Genres({ audioGenre, setAudioGenre }: GenresProps) {
 
       <div className="text-xs flex items-center gap-2 flex-wrap">
         {
-          genres.filter((gen) => !audioGenre.includes(gen)).map((gen) => (
+          appInfo.genres?.filter((gen) => !audioGenre.includes(gen)).map((gen) => (
             <button key={gen}
             onClick={() => setAudioGenre((prev) => ([...prev, gen]))}
             className="p-2 hover:text-cyan-400 active:text-cyan-200 transition-colors focus:outline-none focus:ring-none border-0"

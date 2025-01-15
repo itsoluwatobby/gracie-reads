@@ -22,7 +22,7 @@ function App() {
   return (
     <main className={`customScrollBar page-fade-in max-w-[1440px] mx-auto ${theme === 'light' ? 'bg-white' : `bg-gradient-to-b from-[#163d78] via-[#4a4e55] to-[#010b1b] text-white`} w-full h-screen flex flex-col justify-between transition-colors overflow-y-scroll`}>
 
-      <Header appName={appInfo.name} setToggle={setToggle} />
+      <Header appName={appInfo.name!} setToggle={setToggle} />
       <Modal toggle={toggle} setToggle={setToggle} />
 
       <Routes>
@@ -43,8 +43,8 @@ function App() {
           style: {
             borderRadius: '8px',
             color: '#222',
-            padding: '16px',
-            fontSize: '14px',
+            padding: '10px',
+            fontSize: '12px',
           },
         }}
       />

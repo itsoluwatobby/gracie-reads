@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import HoverButton from "./HoverButton";
 import { useEffect, useState } from "react";
 import {
@@ -9,7 +10,7 @@ import MediaPlayer from "./MediaPlayer";
 import MediaSpeed from "./MediaSpeed";
 import { useAppContext } from "../../hooks";
 import { appService } from "../../app/appService";
-import { asyncFunction, STREAM_URI } from "../../app/app.config";
+import { STREAM_URI } from "../../app/app.config";
 import toast from "react-hot-toast";
 
 type AudioBookPlayerProps = {
@@ -24,11 +25,17 @@ export default function AudioBookPlayer({ chapterId }: AudioBookPlayerProps) {
 
   useEffect(() => {
     if (!chapterId) return;
-    asyncFunction(async () => {
-      const chapter = await appService.getAudioChapterById(chapterId);
-      setChapter(chapter.data);
-      setEpisodeLength(chapter.data.chapters.length);
-    });
+    (async () => {
+      try {
+        const chapter = await appService.getAudioChapterById(chapterId);
+        setChapter(chapter.data);
+        setEpisodeLength(chapter.data.chapters.length);
+      } catch (err: unknown) {
+        const error = err as any;
+        const message = error.response?.data?.error?.message || error?.message;
+        toast.error(message);
+      }
+    })();
   }, [chapterId])
 
   const chapterIds = chapter?.chapters.map((chapter) => chapter.episode);

@@ -1,49 +1,55 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useParams } from "react-router-dom"
-import { AudioBookPlayer, AudioRating, BookRecommendations } from "../components/AudioBook";
+import {
+  AudioBookPlayer,
+  AudioRating,
+  BookRecommendations,
+} from "../components/AudioBook";
 import { AiOutlineHeart } from "react-icons/ai";
 import { PageHeader } from "../components";
 import { useEffect, useState } from "react";
-import { asyncFunction, BASE_URL } from "../app/app.config";
+import { BASE_URL } from "../app/app.config";
 import { appService } from "../app/appService";
+import toast from "react-hot-toast";
 
 export default function BookPage() {
   const { bookId } = useParams();
   const [audioBook, setAudioBook] = useState<AudioSchema>();
 
-  const book = {
-    id: '1',
-    title: 'Things fall apart',
-    author: 'Chinue Achebe',
-    thumbnail: '',
-  };
-
   useEffect(() => {
     if (!bookId) return;
-     asyncFunction(async () => {
+
+    (async () => {
+      try {
         const audioData = await appService.getAudio(bookId);
         setAudioBook(audioData.data);
-      });
-    }, [bookId])
+      } catch (err: unknown) {
+        const error = err as any;
+        const message = error.response?.data?.error?.message || error?.message;
+        toast.error(message);
+      }
+    })();
+  }, [bookId])
 
   return (
-    <div 
-    id={bookId}
-    className='h-auto w-full flex flex-col px-10 maxMobile:px-5 py-8 gap-12'>
+    <div
+      id={bookId}
+      className='h-auto w-full flex flex-col px-10 maxMobile:px-5 py-8 gap-12'>
 
       <PageHeader />
 
       <div className="flex flex-col gap-6">
-        <h1 className="capitalize text-center border-t-2 pt-2 text-3xl font-semibold">{book.author}</h1>
+        <h1 className="capitalize text-center border-t-2 pt-2 text-3xl font-semibold">{audioBook?.author}</h1>
 
         <article
-        className='flex items-center bg-gray-600 rounded-md gap-6 md:w-[30rem] text-sm transition-transform p-2 shadow-md'>
+          className='flex items-center bg-gray-600 rounded-md gap-6 md:w-[30rem] text-sm transition-transform p-2 shadow-md'>
           <figure className='flex-none bg-gray-700 rounded-md w-40 h-44 mobile:h-36 mobile:w-28'>
             {
               audioBook?.thumbnail ?
-              <img src={`${BASE_URL}/${audioBook.thumbnail}`} alt={audioBook.title} 
-              className='w-full rounded-md h-full object-cover'
-              />
-              : null
+                <img src={`${BASE_URL}/${audioBook.thumbnail}`} alt={audioBook.title}
+                  className='w-full rounded-md h-full object-cover'
+                />
+                : null
             }
           </figure>
 
@@ -65,7 +71,7 @@ export default function BookPage() {
         </article>
 
         <div>
-          <span className="font-semibold text-base">{audioBook?.title}: </span>
+          <span className="font-semibold text-base">{audioBook?.title}</span>
           <p className="text-[13px] indent-3 text-justify">{audioBook?.about}</p>
         </div>
       </div>

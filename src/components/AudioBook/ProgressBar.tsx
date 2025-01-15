@@ -1,34 +1,29 @@
-import { useLayoutEffect, useState } from "react"
+// import { useEffect, useState } from "react"
 
-export default function ProgressBar() {
-  const [progress, setProgress] = useState('w-[10%]');
-  console.log(progress)
+type ProgressBarProps = {
+  mediaProgress: string;
+}
+export default function ProgressBar({ mediaProgress }: ProgressBarProps) {
+  // const [progress, setProgress] = useState('w-[0%]');
 
   // useEffect(() => {
-  //   setProgress(mediaProgress)
-  // }, [mediaProgress])
+  //   const audio = document.getElementById('audioRef') as HTMLAudioElement;
+  //   const handleTimeUpdate = () => {
+  //     const currentTimeInSeconds = audio.currentTime;
+  //     const progress = ((currentTimeInSeconds / audio.duration) * 100).toFixed(0);
+  //     setProgress(`w-[${progress}%]`);
+  //   };
 
-  useLayoutEffect(() => {
-    const audio = document.getElementById('audioRef') as HTMLAudioElement;
-    const handleTimeUpdate = () => {
-      const currentTimeInSeconds = audio.currentTime;
-      const progress = ((currentTimeInSeconds / audio.duration) * 100).toFixed(4);
-      setProgress(`w-[${progress}%]`);
-    };
+  //   audio.addEventListener('timeupdate', handleTimeUpdate);
 
-    // audio.addEventListener('canplay', () => {
-      audio.addEventListener('timeupdate', handleTimeUpdate);
-    // })
-
-    return () => {
-      audio.removeEventListener('timeupdate', handleTimeUpdate);
-    }
-  }, [])
-
+  //   return () => {
+  //     audio.removeEventListener('timeupdate', handleTimeUpdate);
+  //   }
+  // }, [])
 
   return (
-    <div className="relative duration-300 transition-transform h-[6px] w-full bg-slate-500 rounded-md">
-      <div className={`absolute h-[6px] ${progress} bg-slate-800 rounded-md`}></div>
+    <div className="relativ transition-transform h-[6px] w-full bg-slate-500 rounded-md">
+      <div className={`absolut h-[6px] ${mediaProgress} bg-slate-800 rounded-md`}></div>
     </div>
   )
 }
