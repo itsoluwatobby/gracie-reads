@@ -35,7 +35,7 @@ export default function Header({ appName, setToggle }: HeaderProps) {
             onClick={() => {
               if (!['categories', 'latest'].includes(link))
                 setCurrent({ currentGenre: null, nav: null });
-              else setCurrent((prev) => ({ ...prev, nav: link }));
+              else setCurrent((prev) => ({ ...prev, nav: link as Name }));
             }}
             >
               <NavButtons

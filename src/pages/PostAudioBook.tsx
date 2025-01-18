@@ -32,6 +32,7 @@ export default function PostAudioBook() {
       const data = {
         sessionId,
         timestamp: new Date().toUTCString(),
+        data: {} as AudioSchema,
       };
       cacheData(CacheKeys.session, data);
       setCurrentSession(data);
@@ -71,8 +72,9 @@ export default function PostAudioBook() {
 
   // const canSubmit = [title, author, note, audiobook.thumbnail].every(Boolean);
 
-  const submitForm = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // const submitForm = async (e: FormEvent<HTMLFormElement>) => {
+  const submitForm = async () => {
+    // e.preventDefault();
     if (isLoading) return;
 
     const formData = new FormData();
@@ -81,7 +83,7 @@ export default function PostAudioBook() {
     formData.append('author', author);
     formData.append('about', about ?? '');
     formData.append('genre', helper.stringifyData(audioGenre));
-    formData.append('note', audiobook?.note ?? null);
+    // formData.append('note', audiobook?.note ?? null);
     formData.append('thumbnail', file!);
     // formData.append('reference', helper.stringifyData(audiobook?.reference ?? {}));
 

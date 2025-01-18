@@ -49,7 +49,7 @@ export default function Hero({ observerRef }: HeroProps) {
   
         const recent = sortedAudios.filter((audio) => new Date(audio.createdAt).getTime() >= RecentDuration);
         setAudios({ recent, featured: sortedAudios });
-        setappState({ error: false, message: '', loading: false });
+        setappState({ error: false, errMsg: '', loading: false });
         setRetries(0)
       } catch (err: unknown) {
         setRetries((prev) => prev + 1);
@@ -67,7 +67,7 @@ export default function Hero({ observerRef }: HeroProps) {
     if (search) {
       filtered = audios?.featured?.filter((audio) => audio.title?.includes(search));
     } else {
-      filtered = audios?.featured?.filter((audio) => audio.genre?.includes(current?.currentGenre));
+      filtered = audios?.featured?.filter((audio) => audio.genre?.includes(current.currentGenre as Name));
     }
     setSearchedAudios(filtered);
   }, [current.currentGenre, search])

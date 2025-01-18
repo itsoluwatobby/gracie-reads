@@ -3,12 +3,14 @@ import { ChangeEvent } from "react";
 type InputProps = {
   name: string;
   value: string;
+  disabled?: boolean;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function Input(
   {
-    name, value, handleChange,
+    name, value,
+    handleChange, disabled = false
   }: InputProps
 ) {
 
@@ -19,6 +21,7 @@ export default function Input(
           value={value}
           name={name}
           id={name}
+          disabled={disabled}
           placeholder={name}
           onChange={handleChange}
           className='flex-auto focus:border-blue text-sm focus:outline-none placeholder:text-gray-400 px-4 py-1.5 rounded-sm text-black'

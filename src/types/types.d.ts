@@ -132,7 +132,11 @@ type AppConfig = {
   updatedAt: string,
 }
 
-type SESSION = { sessionId: string, timestamp: string }
+type SESSION = {
+  sessionId: string,
+  timestamp: string,
+  data: AudioSchema,
+}
 type LoadingStates = {
   isLoading: boolean;
   fileLoading: boolean;

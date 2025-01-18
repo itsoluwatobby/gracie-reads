@@ -99,7 +99,7 @@ export default function ChapterUploader({ cacheData, currentSession, setAudioboo
       formData.append('episode', episode);
 
       const result = await appService.uploadAudio(formData, setUploadProgress);
-      setAudioInfo(prev => ({ duration: '', filename: '', episode: +episode + 1 }));
+      setAudioInfo(prev => ({ duration: '', filename: '', episode: String(+episode + 1) }));
       setChapter(result.data);
       setAudiobook((prev) => ({ ...prev, chapterId: result.data._id }))
     } catch (err: unknown) {

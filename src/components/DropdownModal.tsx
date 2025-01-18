@@ -13,7 +13,7 @@ export default function DropdownModal({ appInfo, current, setCurrent }: Dropdown
   };
 
   return (
-    <section className={`${current?.nav ? 'absolute' : 'hidden'} top-7 ${ModalType[current?.nav]} rounded flex flex-col text-black p-3 capitalize gap-2 text-[13px] bg-white max-h-40 w-32 transition-transform`}>
+    <section className={`${current?.nav ? 'absolute' : 'hidden'} top-7 ${ModalType[current.nav as Name]} rounded flex flex-col text-black p-3 capitalize gap-2 text-[13px] bg-white max-h-40 w-32 transition-transform`}>
       {
         appInfo?.genres?.map((genre) => (
           <span

@@ -4,7 +4,7 @@ import { MdErrorOutline } from "react-icons/md";
 type SectionedCardsProps = {
   sectionTitle: string;
   audios: AudioSchema[];
-  appState:{appState}
+  appState: AppState;
 }
 
 export default function SectionedCards({ sectionTitle, audios, appState }: SectionedCardsProps) {
