@@ -26,7 +26,7 @@ export default function Chapters(
   const padNumber = (index: string) => index.padStart(2, '0');
 
   return (
-    <div className="customScrollBar flex md:w-[80%] md:mx-auto flex-col gap-1 transition-colors h-[18rem] shadow-inner p-1 overflow-y-scroll">
+    <div className="customScrollBar flex md:w-[80%] md:mx-auto flex-col gap-1 transition-colors rounded max-h-[18rem] shadow-inner p-1 overflow-y-scroll">
       {
         episodes?.map((chapter, index) => (
           <article

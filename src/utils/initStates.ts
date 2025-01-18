@@ -12,7 +12,7 @@ export const InitAudioBookState: AudioSchema = {
   about: '',
   createdAt: '',
   updatedAt: '', 
-  genre: '',
+  genre: [],
   chapterId: '',
   title: '',
   isPublic: false,

@@ -15,6 +15,12 @@
   height: 0;
 }
 
+.grid-display {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, 150px);
+}
+
 .customScrollBar::-webkit-scrollbar{
   width: 6px;
   height: 4px;

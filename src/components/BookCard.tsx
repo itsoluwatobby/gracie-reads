@@ -27,7 +27,7 @@ export default function BookCard(
       to={`/${bookId}`}
       title={author}
       // onMouseEnter={modifyHoverCount}
-      className={`flex flex-col rounded-md gap-1 h-56 w-40 mobile:w-36 mobile:h-52 text-sm cursor-pointer transition-transform`}>
+      className={`flex flex-col rounded-md gap-1 h-56 mobile:h-52 text-sm cursor-pointer transition-transform`}>
       <figure className='bg-gray-700 rounded-md hover:scale-[1.01] w-full h-[80%]'>
         {
           thumbnail ?

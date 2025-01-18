@@ -2,6 +2,12 @@
 
 type ScrollDirection = 'left' | 'right'
 
+type Name = 'categories' | 'latest'
+type CurrentModal = {
+  nav: Name | null,
+  currentGenre: string | null;
+}
+
 type Theme = 'light' | 'dark'
 type AppContextProps = {
   appInfo: Partial<AppConfig>;
@@ -9,7 +15,9 @@ type AppContextProps = {
   mediaPlayer: MediaPlayerProp;
   toggleModal: boolean;
   isServerOnline: boolean;
+  current: CurrentModal;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
+  setCurrent: React.Dispatch<React.SetStateAction<CurrentModal>>;
   setToggleModal: React.Dispatch<React.SetStateAction<boolean>>;
   setMediaPlayer: React.Dispatch<React.SetStateAction<MediaPlayerProp>>;
   deactivatePlayer: () => void;
@@ -20,6 +28,12 @@ type InputType = 'text' | 'number' | 'checkbox' | 'numeric' | 'date'
 type NavProps = {
   name: string;
   link: string;
+}
+
+type AppState = {
+  loading: boolean,
+  error: boolean,
+  errMsg: string
 }
 
 type SocialProps = {
@@ -92,7 +106,7 @@ interface AudioSchema {
   about?: string;
   createdAt: string;
   updatedAt: string; 
-  genre: string;
+  genre: string[];
   chapterId: string;
   title: string;
   isPublic: boolean;

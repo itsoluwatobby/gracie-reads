@@ -19,7 +19,7 @@ export default function Footer() {
   ];
   
   return (
-    <footer className="h-32 flex items-center justify-center flex-col gap-4 w-full">
+    <footer className="h-32 flex items-center p-4 justify-center flex-col gap-4 w-full">
       
       <h4>Lovely Audiobooks</h4>
 
@@ -39,8 +39,10 @@ export default function Footer() {
         }
       </div>
 
-      <a></a>
-      <span></span>
+      {/* <a></a> */}
+      <span className='text-gray-300'>
+        <small>copyright&copy;{new Date().getFullYear()}. Lovely Audiobooks</small>
+      </span>
     </footer>
   )
 }

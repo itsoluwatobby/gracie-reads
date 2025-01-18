@@ -30,6 +30,9 @@ export const AppContextDataProvider = (
   const [toggleModal, setToggleModal] = useState(false);
   const [retries, setRetries] = useState(0);
   const [mediaPlayer, setMediaPlayer] = useState<MediaPlayerProp>(initAudioState);
+  const [current, setCurrent] = useState<CurrentModal>(
+    { nav: null, currentGenre: null }
+  );
 
   const deactivatePlayer = () => {
     setMediaPlayer(initAudioState);
@@ -59,6 +62,7 @@ export const AppContextDataProvider = (
     theme, setTheme, deactivatePlayer,
     appInfo, toggleModal, setToggleModal,
     mediaPlayer, setMediaPlayer, isServerOnline,
+    current, setCurrent,
   };
 
   return (

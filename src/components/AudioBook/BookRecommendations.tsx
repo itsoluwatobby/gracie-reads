@@ -36,7 +36,6 @@ export default function BookRecommendations() {
       <div 
       ref={containerRef as React.LegacyRef<HTMLDivElement>}
       className='customScrollBar w-full flex gap-6 items-center transition-transform overflow-x-scroll p-3'>
-        {/* <div className='customScrollBar grid grid-cols-8 gap-48 px-4 overflow-x-scroll'> */}
         {
           sampleBooks.map((book) => (
             <BookCard

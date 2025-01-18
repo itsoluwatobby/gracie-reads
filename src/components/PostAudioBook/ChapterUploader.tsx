@@ -2,7 +2,7 @@
 import { ChangeEvent, useState, useEffect, useRef } from 'react';
 import { appService } from '../../app/appService';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 import { CacheKeys, helper } from '../../utils';
 import { Colors } from '../../utils/colors';
 import { MdOutlineMenuBook } from "react-icons/md";
@@ -12,13 +12,15 @@ import ModalConfirmation from '../ModalConfirmation';
 import { useAppContext } from '../../hooks';
 
 type ChapterUploaderProps = {
+  currentSession: SESSION;
+  cacheData: <T>(key: string, data: T) => string;
   setAudiobook: React.Dispatch<React.SetStateAction<AudioSchema>>;
 }
 
-export default function ChapterUploader({ setAudiobook }: ChapterUploaderProps) {
-  const dialogRef = useRef<HTMLDialogElement>();
+export default function ChapterUploader({ cacheData, currentSession, setAudiobook }: ChapterUploaderProps) {
+  // const dialogRef = useRef<HTMLDialogElement>();
   const { isServerOnline } = useAppContext();
-  const { cacheData, getCachedData } = useLocalStorage();
+  const { getCachedData } = useLocalStorage();
   const [file, setFile] = useState<File | null>(null);
   const [chapter, setChapter] = useState<Chapter>();
   const [loadingStates, setLoadingStates] = useState<LoadingStates>(
@@ -27,7 +29,7 @@ export default function ChapterUploader({ setAudiobook }: ChapterUploaderProps) 
       fileLoading: false,
     },
   );
-  const [currentSession, setCurrentSession] = useState<SESSION>(getCachedData<SESSION>(CacheKeys.session));
+  // const [currentSession, setCurrentSession] = useState<SESSION>(getCachedData<SESSION>(CacheKeys.session));
   const [uploadProgress, setUploadProgress] = useState(0);
   const [audioInfo, setAudioInfo] = useState({ duration: '', filename: '', episode: '1' });
 
@@ -63,8 +65,14 @@ export default function ChapterUploader({ setAudiobook }: ChapterUploaderProps) 
         try {
           const result = await appService.getAudioChapterBySession(currentSession.sessionId);
           setChapter(result.data);
+          const data = {
+            ...currentSession,
+            data: { ...currentSession.data, chapterId: result.data._id }
+          };
+          cacheData(CacheKeys.session, data);
         } catch (err: unknown) {
           const error = err as any;
+          if (error.response?.data?.error?.statusCode === 404) return;
           const message = error.response?.data?.error?.message || error?.message;
           toast.error(message);
         } finally {
@@ -72,16 +80,8 @@ export default function ChapterUploader({ setAudiobook }: ChapterUploaderProps) 
         }
       }
       fetchChapter();
-    } else {
-      const sessionId = nanoid();
-      const data = {
-        sessionId,
-        timestamp: new Date().toUTCString(),
-      };
-      cacheData(CacheKeys.session, data);
-      setCurrentSession(data)
     }
-  }, [currentSession, setCurrentSession, cacheData, chapter?._id, isServerOnline])
+  }, [currentSession, chapter?._id, isServerOnline])
 
   const canUpload = [duration, episode, file].every(Boolean);
 
@@ -99,6 +99,7 @@ export default function ChapterUploader({ setAudiobook }: ChapterUploaderProps) 
       formData.append('episode', episode);
 
       const result = await appService.uploadAudio(formData, setUploadProgress);
+      setAudioInfo(prev => ({ duration: '', filename: '', episode: +episode + 1 }));
       setChapter(result.data);
       setAudiobook((prev) => ({ ...prev, chapterId: result.data._id }))
     } catch (err: unknown) {
@@ -110,21 +111,21 @@ export default function ChapterUploader({ setAudiobook }: ChapterUploaderProps) 
     }
   };
 
-  const triggerModal = (action: boolean) => {
-    if (!dialogRef?.current) return;
-    if (action) dialogRef.current.showModal()
-    else dialogRef.current.close();
-  }
+  // const triggerModal = (action: boolean) => {
+  //   if (!dialogRef?.current) return;
+  //   if (action) dialogRef.current.showModal()
+  //   else dialogRef.current.close();
+  // }
 
   return (
     <div className='flex flex-col text-sm w-full gap-3 rounded shadow-inner'>
 
-      <ModalConfirmation 
+      {/* <ModalConfirmation 
       dialogRef={dialogRef}
       triggerModal={triggerModal}
-      />
+      /> */}
 
-      <div className='flex items-center text-green-400 text-xs gap-3 flex-wrap'>
+      <div className='flex items-center text-green-400 text-xs gap-3 gap-y-5 flex-wrap'>
         {
           chapter?.chapters.map((episode) => (
             <Episodes
@@ -141,6 +142,7 @@ export default function ChapterUploader({ setAudiobook }: ChapterUploaderProps) 
         <input
           type="number"
           name="episode"
+          value={episode}
           min={1}
           disabled={isLoading}
           placeholder='episode'
@@ -156,7 +158,7 @@ export default function ChapterUploader({ setAudiobook }: ChapterUploaderProps) 
           onChange={handleFileChange}
         />
         <label htmlFor="audio-file-upload"
-          className='border flex flex-nowrap items-center gap-1.5 max-w-36 rounded p-[0.36rem]'
+          className={`border ${filename ? 'border-green-500' : ''} flex flex-nowrap items-center gap-1.5 max-w-36 rounded p-[0.36rem]`}
         >
           <MdOutlineMenuBook className='text-xl' />
           <span className={`text-gray-400 text-xs ${fileLoading ? 'animate-pulse' : 'animate-none'}`}>{filename ? (fileLoading ? 'loading...' : helper.reduceTextLength(filename, 11)) : 'audio book'}</span>

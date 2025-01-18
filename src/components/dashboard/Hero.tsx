@@ -3,6 +3,7 @@
 import { CiSearch } from 'react-icons/ci';
 import { FormEvent, useEffect, useState } from 'react';
 import SectionedCards from "./SectionedCards";
+import SearchResults from "./SearchResults";
 import { appService } from "../../app/appService";
 import PageHeader from "../PageHeader";
 import { RecentDuration } from "../../utils";
@@ -19,9 +20,14 @@ type AudioTypes = {
 }
 export default function Hero({ observerRef }: HeroProps) {
   const [search, setSearch] = useState('');
+  const [searchedAudios, setSearchedAudios] = useState<AudioSchema[]>([]);
   const [retries, setRetries] = useState(0);
-  const { isServerOnline } = useAppContext();
-  // const [isLoading, setIsLoading] = useState(false);
+  const { isServerOnline, current } = useAppContext();
+  const [appState, setappState] = useState<AppState>(
+    {
+      loading: false, error: false, errMsg: ''
+    }
+  );
   const [audios, setAudios] = useState<AudioTypes>(
     { recent: [], featured: [] }
   );
@@ -34,7 +40,7 @@ export default function Hero({ observerRef }: HeroProps) {
   useEffect(() => {
     if (!isServerOnline) return;
     (async () => {
-      // setIsLoading(true);
+      setappState(prev => ({...prev, error: false, loading: true }));
       if (retries >= 5) return;
       try {
         const audioData = await appService.fetchAudios();
@@ -43,18 +49,28 @@ export default function Hero({ observerRef }: HeroProps) {
   
         const recent = sortedAudios.filter((audio) => new Date(audio.createdAt).getTime() >= RecentDuration);
         setAudios({ recent, featured: sortedAudios });
+        setappState({ error: false, message: '', loading: false });
         setRetries(0)
       } catch (err: unknown) {
         setRetries((prev) => prev + 1);
         const error = err as any;
         const message = error.response?.data?.error?.message || error?.message;
+        setappState({ error: true, loading: false, errMsg: message });
         toast.error(message);
       }
-      // finally {
-      //   setIsLoading(false)
-      // }
     })()
   }, [retries, isServerOnline])
+  
+  useEffect(() => {
+    if (!current?.currentGenre || !search) return;
+    let filtered: AudioSchema[]
+    if (search) {
+      filtered = audios?.featured?.filter((audio) => audio.title?.includes(search));
+    } else {
+      filtered = audios?.featured?.filter((audio) => audio.genre?.includes(current?.currentGenre));
+    }
+    setSearchedAudios(filtered);
+  }, [current.currentGenre, search])
 
   return (
     <section
@@ -64,7 +80,7 @@ export default function Hero({ observerRef }: HeroProps) {
     >
       <div className='text-xl font-medium flex flex-col gap-10 py-10 items-center w-full'>
 
-        <PageHeader />
+        <PageHeader prefix='Welcome To' />
 
         <TypewriterEffect text="Enjoy your free audio books here." start="BEGIN" delay={0.4} />
       </div>
@@ -83,8 +99,16 @@ export default function Hero({ observerRef }: HeroProps) {
         </button>
       </form>
 
-      <SectionedCards sectionTitle='Recent Audiobooks' audios={audios.recent} />
-      <SectionedCards sectionTitle='Featured Audiobooks' audios={audios.featured} />
+      {search ? <SearchResults searchedAudios={searchedAudios} /> : null}
+
+      <SectionedCards sectionTitle='Recent Audiobooks'
+        appState={appState}
+        audios={audios.recent}
+      />
+      <SectionedCards sectionTitle='Featured Audiobooks'
+      appState={appState}
+      audios={audios.featured}
+      />
 
     </section>
   )

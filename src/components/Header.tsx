@@ -1,9 +1,11 @@
-import React from 'react'
+import { useState } from 'react'
 import { ModalTags,  } from '../utils';
 import NavButtons from './Navs';
+import DropdownModal from './DropdownModal';
 import ChannelButton from './Button';
 import Logo from './Logo';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useAppContext } from '../hooks/useAppContext'
 
 type HeaderProps = {
   appName: string;
@@ -11,6 +13,9 @@ type HeaderProps = {
 }
 // 50,10 75,25 75,55 50,68 25,55 25,25
 export default function Header({ appName, setToggle }: HeaderProps) {
+  const { pathname } = useLocation();
+  const [name, setName] = useState('')
+  const { appInfo, current, setCurrent } = useAppContext();
 
   return (
     <header className={`sticky top-0 w-full pl-1 pt-4 pr-3 bg-[#751225] flex items-center justify-between h-16 z-10 shadow-md transition-transform lg:px-10`}>
@@ -19,19 +24,37 @@ export default function Header({ appName, setToggle }: HeaderProps) {
         <Logo appName={appName} />
       </Link>
 
-      <ul className='hidden md:flex items-center gap-x-6 list-none'>
+      <ul className='hidden relative md:flex items-center gap-x-6 list-none'>
         {
+          pathname.includes('audio-book')
+          ? null
+          :
           ModalTags.map((link, bullet) => (
-            <NavButtons
-              key={link}
-              link={link}
-              bullet={bullet + 1}
-              classNames='gap-x-1 text-sm'
-            />
+            <div 
+            key={link}
+            onClick={() => {
+              if (!['categories', 'latest'].includes(link))
+                setCurrent({ currentGenre: null, nav: null });
+              else setCurrent((prev) => ({ ...prev, nav: link }));
+            }}
+            >
+              <NavButtons
+                key={link}
+                link={link}
+                bullet={bullet + 1}
+                classNames='gap-x-1 text-sm'
+              />
+            </div>
           ))
         }
         <ChannelButton />
+        <DropdownModal 
+          current={current}
+          appInfo={appInfo}
+          setCurrent={setCurrent}
+        />
       </ul>
+
 
       <button
         onClick={() => setToggle(prev => !prev)}

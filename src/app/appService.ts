@@ -8,6 +8,10 @@ class AppService {
       Paths.create.endpoint,
       formdata,
       Paths.create.method,
+      'json',
+      {},
+      () => {},
+      { 'Content-Type': 'multipart/form-data' },
     );
     return result.data;
   }
