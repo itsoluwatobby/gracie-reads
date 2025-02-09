@@ -19,6 +19,7 @@ export const AppContextDataProvider = (
     {
       name: 'Lovely Audios',
       email: 'crazywandyte@gmail.com',
+      isLoggedIn: false,
     },
   );
   const [theme, setTheme] = useState<Theme>(
@@ -62,7 +63,7 @@ export const AppContextDataProvider = (
     theme, setTheme, deactivatePlayer,
     appInfo, toggleModal, setToggleModal,
     mediaPlayer, setMediaPlayer, isServerOnline,
-    current, setCurrent,
+    current, setCurrent, setAppInfo,
   };
 
   return (

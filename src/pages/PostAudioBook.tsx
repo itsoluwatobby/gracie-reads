@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChangeEvent, FormEvent, useState, useEffect } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import { Genres, Input, PageHeader } from "../components";
 import { InitAudioBookState } from "../utils/initStates";
 import { nanoid } from "nanoid";
@@ -26,6 +26,7 @@ export default function PostAudioBook() {
   const { author, title, about } = audiobook;
   // reference,
 
+  
   useEffect(() => {
     if (!currentSession?.sessionId) {
       const sessionId = nanoid();
@@ -42,7 +43,6 @@ export default function PostAudioBook() {
       setAudiobook({ ...data });
     }
   }, [])
-
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const [name, value] = [e.target.name, e.target.value];
@@ -71,7 +71,7 @@ export default function PostAudioBook() {
   }, [audioGenre])
 
   // const canSubmit = [title, author, note, audiobook.thumbnail].every(Boolean);
-
+  
   // const submitForm = async (e: FormEvent<HTMLFormElement>) => {
   const submitForm = async () => {
     // e.preventDefault();

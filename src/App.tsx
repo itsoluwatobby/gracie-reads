@@ -14,7 +14,9 @@ import {
   Dashboard,
   PageNotFound,
   PostAudioBook,
+  UnauthorisedPage,
 } from './pages';
+import PostPageLayout from './layout/PostPageSecure';
 
 function App() {
   const { theme, appInfo } = useAppContext();
@@ -22,7 +24,7 @@ function App() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   return (
-    <main className={`customScrollBar page-fade-in max-w-[1440px] mx-auto ${theme === 'light' ? 'bg-white' : `bg-gradient-to-b from-[#163d78] via-[#4a4e55] to-[#010b1b] text-white`} w-full h-screen flex flex-col justify-between transition-colors overflow-y-scroll`}>
+    <main className={`customScrollBar page-fade-in max-w-[1440px] mx-auto ${theme === 'light' ? 'bg-white' : `bg-gradient-to-b from-sky-50 to-white text-white`} w-full h-screen flex flex-col justify-between transition-colors overflow-y-scroll`}>
 
       <Header appName={appInfo.name!} setIsLoginModalOpen={setIsLoginModalOpen} />
       <Modal toggle={toggle} setToggle={setToggle} />
@@ -31,9 +33,14 @@ function App() {
         <Route path='/' element={<AppLayout />}>
           <Route index element={<Dashboard />} />
           <Route path=':bookId' element={<BookPage />} />
-          <Route path='post-audio-book' element={<PostAudioBook />} />
+
+          <Route path='post-audio-book' element={<PostPageLayout />}>
+            <Route index element={<PostAudioBook />} />
+          </Route>
+
+          <Route path='unauthorised' element={<UnauthorisedPage />} />
         </Route>
-        
+
         <Route path='*' element={<PageNotFound />} />
 
       </Routes>

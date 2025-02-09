@@ -41,10 +41,14 @@ export default function Dashboard() {
         const data = audioData.data.docs;
         const sortedAudios =  data?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   
-        const recent = sortedAudios.filter((audio) => new Date(audio.createdAt).getTime() >= RecentDuration);
+        const currentTime = new Date().getTime();
+        // Calculate the threshold timestamp (5 days ago from now)
+        const thresholdTime = currentTime - RecentDuration;
+
+        const recent = sortedAudios.filter((audio) => new Date(audio.createdAt).getTime() >= thresholdTime);
         setAudios({ recent, featured: sortedAudios });
         setappState({ error: false, errMsg: '', loading: false });
-        setRetries(0)
+        setRetries(0);
       } catch (err: unknown) {
         setRetries((prev) => prev + 1);
         const error = err as any;
@@ -56,17 +60,19 @@ export default function Dashboard() {
   }, [retries, isServerOnline])
   
   useEffect(() => {
-    if (!current?.currentGenre || !searchQuery) return;
-    let filtered: AudioSchema[]
     if (searchQuery) {
-      filtered = audios?.featured?.filter((audio) => audio.title?.includes(searchQuery));
-    } else {
-      filtered = audios?.featured?.filter((audio) => audio.genre?.includes(current.currentGenre as Name));
+      const query = searchQuery.toLowerCase();
+      const filtered = audios?.featured?.filter((audio) => {
+        return (
+          audio.title.toLowerCase()?.includes(query)
+          || audio.author?.includes(query)
+          || audio.genre?.includes(current.currentGenre as Name)
+        );
+      });
+      setSearchedAudios(filtered);
     }
-    setSearchedAudios(filtered);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current.currentGenre, searchQuery])
-
 
   return (
     <div className="bg-gradient-to-b from-sky-50 to-white">

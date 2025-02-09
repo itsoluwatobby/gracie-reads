@@ -34,7 +34,7 @@ export default function BookPage() {
   return (
     <div
       id={bookId}
-      className='h-auto w-full flex flex-col px-10 maxMobile:px-5 py-8 gap-12'>
+      className='h-auto w-full flex flex-col bg-slate-700 px-10 maxMobile:px-5 py-8 gap-12'>
 
       <PageHeader />
 

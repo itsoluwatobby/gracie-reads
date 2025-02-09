@@ -17,7 +17,7 @@ export default function SearchResults({ searchQuery, searchedAudios }: SearchRes
             <Link
             to={`/${audio._id}`}
             key={audio._id}
-            className='p-1 w-full last:border-b-0 border-b'
+            className='p-2 hover:bg-gray-100 transition-colors w-full last:border-b-0 border-b'
             >
               {audio.title}
             </Link>

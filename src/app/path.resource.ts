@@ -51,4 +51,12 @@ export const AppConfigPaths = {
     endpoint: `${AppConfigBasePath}/`,
     method: HTTPMethods.PUT,
   },
+  setup: {
+    endpoint: `${AppConfigBasePath}/setup`,
+    method: HTTPMethods.POST,
+  },
+  login: {
+    endpoint: `${AppConfigBasePath}/login`,
+    method: HTTPMethods.POST,
+  },
 };

@@ -121,5 +121,25 @@ class AppService {
 
     return result.data
   }
+
+  async setup(body: CredentialProp) {
+    const result = await appRequest<Partial<AppConfig>, ResponseData<AppConfig>>(
+      AppConfigPaths.setup.endpoint,
+      body,
+      AppConfigPaths.setup.method,
+    );
+
+    return result.data
+  }
+
+  async login(body: CredentialProp) {
+    const result = await appRequest<Partial<AppConfig>, ResponseData<AppConfig>>(
+      AppConfigPaths.login.endpoint,
+      body,
+      AppConfigPaths.login.method,
+    );
+
+    return result.data
+  }
 }
 export const appService = new AppService();

@@ -17,6 +17,7 @@ type AppContextProps = {
   isServerOnline: boolean;
   current: CurrentModal;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
+  setAppInfo: React.Dispatch<React.SetStateAction<Partial<AppConfig>>>;
   setCurrent: React.Dispatch<React.SetStateAction<CurrentModal>>;
   setToggleModal: React.Dispatch<React.SetStateAction<boolean>>;
   setMediaPlayer: React.Dispatch<React.SetStateAction<MediaPlayerProp>>;
@@ -130,6 +131,7 @@ type AppConfig = {
   genres: string[],
   createdAt: string,
   updatedAt: string,
+  isLoggedIn: boolean;
 }
 
 type SESSION = {
@@ -140,4 +142,9 @@ type SESSION = {
 type LoadingStates = {
   isLoading: boolean;
   fileLoading: boolean;
+}
+
+type CredentialProp = {
+  email:  string;
+  password: string;
 }

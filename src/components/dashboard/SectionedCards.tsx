@@ -1,6 +1,7 @@
 import { ChevronRight, Star } from 'lucide-react';
 import { AudiobookCard } from '../BookCard'
 import { MdErrorOutline } from "react-icons/md";
+import { useEffect, useState } from 'react';
 
 type SectionedCardsProps = {
   sectionTitle: string;
@@ -9,6 +10,16 @@ type SectionedCardsProps = {
 }
 
 export default function SectionedCards({ sectionTitle, audios, appState }: SectionedCardsProps) {
+  const [isAvailable, setisAvailable] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (isMounted && audios) setisAvailable(audios?.length >= 1);
+
+    return () => {
+      isMounted = false;
+    }
+  }, [audios])
 
   return (
     <section
@@ -21,17 +32,21 @@ export default function SectionedCards({ sectionTitle, audios, appState }: Secti
           <Star className="text-sky-600 mr-2" />
           <h2 className="text-2xl capitalize font-bold text-gray-800">{sectionTitle} Audiobooks</h2>
         </div>
-        <button className="flex items-center text-sky-600 hover:text-sky-700">
+        {
+          isAvailable 
+            ? <button className="flex items-center text-sky-600 hover:text-sky-700">
           View all <ChevronRight size={20} />
-        </button>
+          </button>
+          : null
+        }
       </div>
       {
         appState?.loading 
         ? (
-          <div className='grid-display gap-6 items-center justify-center transition-transform'>
+          <div className='grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-4 transition-transform'>
             {
               [...Array(4).keys()].map((i) => (
-                <article key={i} className='rounded-md gap-1 h-40 bg-gray-700 animate-pulse mobile:w-36 mobile:h-52 text-sm transition-transform'></article> 
+                <article key={i} className='rounded-md h-48 bg-sky-100 animate-pulse mobile:w-36 mobile:h-52 text-sm transition-transform'></article> 
               ))
             }
           </div>
@@ -43,24 +58,24 @@ export default function SectionedCards({ sectionTitle, audios, appState }: Secti
             <MdErrorOutline className='text-2xl' />
             </div>
           ) : (
-            audios?.length ?
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* <div className='grid-display flexflex-wrap gap-4 items-center justify-center transition-transform'> */}
-              {
-                audios?.map((book) => (
-                  <AudiobookCard 
-                    key={book._id}
-                    bookId={book._id!}
-                    author={book.author}
-                    title={book.title}
-                    thumbnail={book.thumbnail}
-                    chapterId={book.chapterId}
-                  />
-                ))
-              }
-            </div>
+            isAvailable ?
+              <div className="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-4">
+              {/* <div className='grid-display flexflex-wrap gap-4 items-center justify-center transition-transform'> */}
+                {
+                  audios?.map((book) => (
+                    <AudiobookCard 
+                      key={book._id}
+                      bookId={book._id!}
+                      author={book.author}
+                      title={book.title}
+                      thumbnail={book.thumbnail}
+                      chapterId={book.chapterId}
+                    />
+                  ))
+                }
+              </div>
               :
-              <p className='font-mono text-gray-200 text-lg'>No {sectionTitle} available at present</p>
+              <p className='font-mono text-gray-800 text-center text-xl capitalize'>No {sectionTitle} audiobooks available at present</p>
           )
         )
       }
