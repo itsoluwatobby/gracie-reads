@@ -6,14 +6,14 @@ export default function BookRecommendations() {
   const containerRef = useRef<HTMLDivElement>();
 
   const sampleBooks = [
-    { id: '1', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '' },
-    { id: '2', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '' },
-    { id: '3', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '' },
-    { id: '4', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '' },
-    { id: '5', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '' },
-    { id: '6', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '' },
-    { id: '7', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '' },
-    { id: '8', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '' },
+    { id: '1', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '', chapterId: 'qw344' },
+    { id: '2', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '', chapterId: 'qw344' },
+    { id: '3', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '', chapterId: 'qw344' },
+    { id: '4', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '', chapterId: 'qw344' },
+    { id: '5', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '', chapterId: 'qw344' },
+    { id: '6', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '', chapterId: 'qw344' },
+    { id: '7', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '', chapterId: 'qw344' },
+    { id: '8', title: 'Things fall apart', author: 'Chinue Achebe', thumbnail: '', chapterId: 'qw344' },
   ];
 
   const handleClick = (direction: ScrollDirection) => {
@@ -44,6 +44,7 @@ export default function BookRecommendations() {
               author={book.author}
               title={book.title}
               thumbnail={book.thumbnail}
+              chapterId={book.chapterId}
             />
           ))
         }

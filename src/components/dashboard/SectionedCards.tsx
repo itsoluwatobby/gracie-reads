@@ -60,7 +60,6 @@ export default function SectionedCards({ sectionTitle, audios, appState }: Secti
           ) : (
             isAvailable ?
               <div className="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-4">
-              {/* <div className='grid-display flexflex-wrap gap-4 items-center justify-center transition-transform'> */}
                 {
                   audios?.map((book) => (
                     <AudiobookCard 
