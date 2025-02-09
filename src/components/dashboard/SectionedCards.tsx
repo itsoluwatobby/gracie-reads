@@ -1,4 +1,5 @@
-import BookCard from '../BookCard'
+import { ChevronRight, Star } from 'lucide-react';
+import { AudiobookCard } from '../BookCard'
 import { MdErrorOutline } from "react-icons/md";
 
 type SectionedCardsProps = {
@@ -10,12 +11,20 @@ type SectionedCardsProps = {
 export default function SectionedCards({ sectionTitle, audios, appState }: SectionedCardsProps) {
 
   return (
-    <section className='w-full flex flex-col gap-4 mb-4'>
-      <div className='flex flex-col'>
-        <p>{sectionTitle}</p>
-        <div className='w-full h-1 bg-gradient-to-tr from-gray-200 via-gray-400 to-gray-200'></div>
+    <section
+    id='featured'
+    className='py-16 bg-sky-50'
+    >
+    <div className="container mx-auto px-4">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center">
+          <Star className="text-sky-600 mr-2" />
+          <h2 className="text-2xl capitalize font-bold text-gray-800">{sectionTitle} Audiobooks</h2>
+        </div>
+        <button className="flex items-center text-sky-600 hover:text-sky-700">
+          View all <ChevronRight size={20} />
+        </button>
       </div>
-
       {
         appState?.loading 
         ? (
@@ -35,15 +44,17 @@ export default function SectionedCards({ sectionTitle, audios, appState }: Secti
             </div>
           ) : (
             audios?.length ?
-            <div className='grid-display flexflex-wrap gap-4 items-center justify-center transition-transform'>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* <div className='grid-display flexflex-wrap gap-4 items-center justify-center transition-transform'> */}
               {
                 audios?.map((book) => (
-                  <BookCard 
+                  <AudiobookCard 
                     key={book._id}
                     bookId={book._id!}
                     author={book.author}
                     title={book.title}
                     thumbnail={book.thumbnail}
+                    chapterId={book.chapterId}
                   />
                 ))
               }
@@ -53,6 +64,7 @@ export default function SectionedCards({ sectionTitle, audios, appState }: Secti
           )
         )
       }
+      </div>
 
     </section>
   )

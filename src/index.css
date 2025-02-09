@@ -10,6 +10,12 @@
   font-style: normal;
 }
 
+@layer utilities {
+  .container {
+    @apply max-w-7xl mx-auto;
+  }
+}
+
 .hideBars::-webkit-scrollbar{
   width: 1px;
   height: 0;
