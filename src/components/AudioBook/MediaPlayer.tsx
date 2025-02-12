@@ -5,7 +5,7 @@ import { CgPlayButton, CgPlayPause } from "react-icons/cg";
 import { IoReload } from "react-icons/io5";
 import { STREAM_URI } from "../../app/app.config";
 import toast from "react-hot-toast";
-// import ProgressBar from "./ProgressBar";
+import ProgressBar from "./ProgressBar";
 
 type MediaPlayerProps = {
   episode: Episode;
@@ -15,8 +15,6 @@ export default function MediaPlayer({ episode }: MediaPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [countUpTime, setCountUpTime] = useState('00:00');
   const [mediaLength, setMediaLength] = useState('00:00');
-  const [mediaProgress, setMediaProgress] = useState('w-[0%]');
-  const [audioLength, setAudioLength] = useState(0);
   const { mediaPlayer, setMediaPlayer, deactivatePlayer } = useAppContext()
   const { startPlayer, audioSource } = mediaPlayer;
 
@@ -26,11 +24,9 @@ export default function MediaPlayer({ episode }: MediaPlayerProps) {
       const minutes = Math.floor(currentTimeInSeconds / 60);
       const seconds = Math.floor(currentTimeInSeconds % 60);
       setCountUpTime(`${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`);
-      const progress = ((currentTimeInSeconds / audioLength) * 100).toFixed(0);
-      setMediaProgress(`w-[${progress}%]`);
     }
   };
-  // console.log(mediaProgress)
+
   useEffect(() => {
     if (audioRef.current?.src?.includes('stream')) {
       audioRef.current?.addEventListener('error', (e) => {
@@ -38,7 +34,6 @@ export default function MediaPlayer({ episode }: MediaPlayerProps) {
         toast.error(`Error loading chapter: ${e.message}`);
       });
     }
-    // audioRef.current?.addEventListener('ended', deactivatePlayer);
 
     const canPlay = () => {
       audioRef.current?.play();
@@ -76,7 +71,6 @@ export default function MediaPlayer({ episode }: MediaPlayerProps) {
         const seconds = Math.floor(durationInSeconds % 60);
         const formattedDuration = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         setMediaLength(formattedDuration ?? '00:00');
-        setAudioLength(durationInSeconds);
       }
     };
     audioRef.current.addEventListener('canplaythrough', handleMetadataLoaded);
@@ -114,13 +108,11 @@ export default function MediaPlayer({ episode }: MediaPlayerProps) {
   }
 
   return (
-    <div className='flex flex-col items-center gap-3 rounded p-2 text-2xl bg-slate-400'>
+    <div className='flex flex-col items-center gap-3 rounded p-3 text-2xl shadow bg-gradient-to-r from-sky-100 to-white'>
+
       {/* media stream */}
-      <div className="relative duration-300 transition-transform h-[6px] w-full bg-slate-500 rounded-md">
-        <div className={`absolut h-[6px] ${mediaProgress} bg-slate-800 rounded-md`}></div>
-      </div>
-      {/* <ProgressBar mediaProgress={mediaProgress} /> */}
-      
+      <ProgressBar audioRef={audioRef} />
+
       <div className="px-2 flex items-center justify-between w-full">
 
         <div className="flex items-center gap-3">
@@ -131,9 +123,9 @@ export default function MediaPlayer({ episode }: MediaPlayerProps) {
           />
           <div
             className='relative w-8 h-5'>
-            <div className='h-full w-full rounded bg-cyan-300'></div>
+            <div className='h-full w-full rounded bg-sky-500'></div>
             <button
-              className={`absolute h-full w-full shadow bg-slate-900 rounded ring-none top-0 transition-transform ${startPlayer ? 'active:-translate-x-0 active:translate-y-0' : '-translate-x-[0.07rem] -translate-y-[0.07rem]'} focus:outline-none focus:border-none grid place-content-center text-3xl`}
+              className={`absolute h-full w-full shadow bg-sky-300 rounded ring-none top-0 transition-transform ${startPlayer ? 'active:-translate-x-0 active:translate-y-0' : '-translate-x-[0.1rem] -translate-y-[0.09rem]'} focus:outline-none focus:border-none grid place-content-center text-3xl`}
             >
               {
                 !startPlayer

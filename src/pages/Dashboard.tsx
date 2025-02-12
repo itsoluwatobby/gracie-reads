@@ -46,7 +46,7 @@ export default function Dashboard() {
         const thresholdTime = currentTime - RecentDuration;
 
         const recent = sortedAudios.filter((audio) => new Date(audio.createdAt).getTime() >= thresholdTime);
-        setAudios({ recent, featured: sortedAudios });
+        setAudios({ recent, featured: sortedAudios }); 
         setappState({ error: false, errMsg: '', loading: false });
         setRetries(0);
       } catch (err: unknown) {

@@ -29,9 +29,9 @@ export default function MediaSpeed() {
             key={rate}
             onClick={() => playBackSpeed(value)}
             className='relative w-14 h-6'>
-            <div className='h-full w-full rounded bg-cyan-300'></div>
+            <div className='h-full w-full rounded bg-sky-500'></div>
             <button
-              className={`absolute h-full w-full shadow bg-slate-900 ${activePlaybackRate === value ? '-translate-x-[0rem] -translate-y-[0rem]' : '-translate-x-[0.07rem] -translate-y-[0.07rem]'} rounded-sm ring-none top-0 transition-transform active:-translate-x-0 active:translate-y-0`}
+              className={`absolute h-full w-full shadow bg-sky-300 ${activePlaybackRate === value ? '-translate-x-[0rem] -translate-y-[0rem]' : '-translate-x-[0.1rem] -translate-y-[0.09rem]'} rounded-sm ring-none top-0 transition-transform active:-translate-x-0 active:translate-y-0`}
             >
               {rate}
             </button>
