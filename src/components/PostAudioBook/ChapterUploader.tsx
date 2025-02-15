@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChangeEvent, useState, useEffect, useRef } from 'react';
+import { ChangeEvent, useState, useEffect } from 'react';
 import { appService } from '../../app/appService';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+// import { useLocalStorage } from '../../hooks/useLocalStorage';
 // import { nanoid } from 'nanoid';
 import { CacheKeys, helper } from '../../utils';
 import { Colors } from '../../utils/colors';
 import { MdOutlineMenuBook } from "react-icons/md";
 import toast from 'react-hot-toast';
 import Episodes from './Episodes';
-import ModalConfirmation from '../ModalConfirmation';
+// import ModalConfirmation from '../ModalConfirmation';
 import { useAppContext } from '../../hooks';
 
 type ChapterUploaderProps = {
@@ -20,7 +20,7 @@ type ChapterUploaderProps = {
 export default function ChapterUploader({ cacheData, currentSession, setAudiobook }: ChapterUploaderProps) {
   // const dialogRef = useRef<HTMLDialogElement>();
   const { isServerOnline } = useAppContext();
-  const { getCachedData } = useLocalStorage();
+  // const { getCachedData } = useLocalStorage();
   const [file, setFile] = useState<File | null>(null);
   const [chapter, setChapter] = useState<Chapter>();
   const [loadingStates, setLoadingStates] = useState<LoadingStates>(
@@ -81,7 +81,7 @@ export default function ChapterUploader({ cacheData, currentSession, setAudioboo
       }
       fetchChapter();
     }
-  }, [currentSession, chapter?._id, isServerOnline])
+  }, [currentSession, chapter?._id, isServerOnline, cacheData])
 
   const canUpload = [duration, episode, file].every(Boolean);
 
@@ -99,7 +99,7 @@ export default function ChapterUploader({ cacheData, currentSession, setAudioboo
       formData.append('episode', episode);
 
       const result = await appService.uploadAudio(formData, setUploadProgress);
-      setAudioInfo(prev => ({ duration: '', filename: '', episode: String(+episode + 1) }));
+      setAudioInfo({ duration: '', filename: '', episode: String(+episode + 1) });
       setChapter(result.data);
       setAudiobook((prev) => ({ ...prev, chapterId: result.data._id }))
     } catch (err: unknown) {

@@ -14,6 +14,7 @@ type AppContextProps = {
   theme: Theme;
   mediaPlayer: MediaPlayerProp;
   toggleModal: boolean;
+  // currentUser: string;
   isServerOnline: boolean;
   current: CurrentModal;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
@@ -100,6 +101,7 @@ type ErrorResponse = {
   }
 }
 
+type Rating = { audioId: string, rating: number }
 interface AudioSchema {
   _id?: string;
   thumbnail: string;
@@ -111,11 +113,11 @@ interface AudioSchema {
   chapterId: string;
   title: string;
   isPublic: boolean;
-  rating?: number
+  rating?: Rating[];
   downloads?: number;
   note?: string;
-  likes?: number;
-  views?: number;
+  likes?: string[];
+  views?: string[];
   reference?: {
     siteName: string;
     link: string;
@@ -132,6 +134,7 @@ type AppConfig = {
   createdAt: string,
   updatedAt: string,
   isLoggedIn: boolean;
+  sessionId?: string;
 }
 
 type SESSION = {

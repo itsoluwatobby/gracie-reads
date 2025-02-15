@@ -26,6 +26,36 @@ class AppService {
     return result.data;
   }
   
+  async likeAudio(id: string) {
+    const result = await appRequest<unknown, ResponseData<AudioSchema>>(
+      `${Paths.likeAudio.endpoint}/${id}`,
+      {},
+      Paths.likeAudio.method,
+    );
+
+    return result.data;
+  }
+  
+  async rateAudiobook(body: { audioId: string, rating: number }) {
+    const result = await appRequest<unknown, ResponseData<AudioSchema>>(
+      `${Paths.rateAudio.endpoint}`,
+      body,
+      Paths.rateAudio.method,
+    );
+
+    return result.data;
+  }
+  
+  async getUser() {
+    const result = await appRequest<unknown, ResponseData<{ ipAddress: string }>>(
+      `${Paths.getUser.endpoint}`,
+      {},
+      Paths.getUser.method,
+    );
+
+    return result.data;
+  }
+  
   async getAudioChapterById(id: string) {
     const result = await appRequest<unknown, ResponseData<Chapter>>(
       `${ChapterPaths.getChapterById.endpoint}/${id}`,
@@ -140,6 +170,16 @@ class AppService {
     );
 
     return result.data
+  }
+
+  async logout() {
+    const result = await appRequest<unknown, ResponseData<AudioSchema>>(
+      `${AppConfigPaths.logout.endpoint}`,
+      {},
+      AppConfigPaths.logout.method,
+    );
+
+    return result.data;
   }
 }
 export const appService = new AppService();

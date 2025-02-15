@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import { appService } from "../app/appService";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../hooks";
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import { CacheKeys } from "../utils";
 
 type LoginModalProp = {
   isOpen: boolean;
@@ -17,6 +19,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProp) {
   const { setAppInfo } = useAppContext();
   const [revealPassword, setRevealPassword] = useState(false);
   const [setupLogin, setSetupLogin] = useState(false);
+  const { cacheData } = useLocalStorage();
   const [appState, setappState] = useState<AppState>(
     {
       loading: false, error: false, errMsg: ''
@@ -30,6 +33,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProp) {
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     
+    setappState((prev) => ({ ...prev, loading: true }));
     try {
       let result;
       if (setupLogin) {
@@ -39,17 +43,19 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProp) {
       } else {
         result = await appService.login(credentials);
         toast.success('Log in successful');
+        cacheData(CacheKeys.login_session, { session: result.data.sessionId });
         setCredentials(initCredential);
         navigate('/post-audio-book');
         setAppInfo(result.data);
         onClose();
       }
-      setappState({ error: false, errMsg: '', loading: false });
     } catch (err: unknown) {
       const error = err as any;
       const message = error.response?.data?.error?.message || error?.message;
-      setappState({ error: true, loading: false, errMsg: message });
+      setappState(prev => ({ ...prev, error: true, errMsg: message }));
       toast.error(message);
+    } finally {
+      setappState((prev) => ({ ...prev, loading: false }));
     }
   };
   
@@ -64,7 +70,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProp) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-8 w-full max-w-md relative">
+      <div className="bg-white rounded-lg p-8 maxMobile:p-6 w-full maxMobile:w-[92%] max-w-md relative">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-3xl text-gray-500 hover:text-gray-700"
@@ -81,6 +87,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProp) {
           <div className="mb-6 relative flex flex-col gap-3">
             <input
               type="email"
+              name="email"
               value={email}
               onChange={handleInput}
               placeholder="johndoe@gmail.com"
@@ -89,6 +96,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProp) {
             />
             <input
               type={revealPassword ? "text" : "password"}
+              name="password"
               value={password}
               onChange={handleInput}
               placeholder="Enter password"

@@ -46,5 +46,6 @@ export const HTTPMethods = {
 export const CacheKeys = {
   playbackRate: 'audio-playback-rate',
   session: 'lovely-audios-session',
+  login_session: 'lovely-audios-login-session',
 }
 

@@ -30,6 +30,7 @@ export const AppContextDataProvider = (
   );
   const [toggleModal, setToggleModal] = useState(false);
   const [retries, setRetries] = useState(0);
+  // const [currentUser, setCurrentUser] = useState('');
   const [mediaPlayer, setMediaPlayer] = useState<MediaPlayerProp>(initAudioState);
   const [current, setCurrent] = useState<CurrentModal>(
     { nav: null, currentGenre: null }
@@ -46,6 +47,9 @@ export const AppContextDataProvider = (
       if (retries >= 5) return;
       try {
         const appConfig = await appService.getAppConfig();
+        // const user = await appService.getUser() as any;
+        // setCurrentUser(user.data.ipAddress);
+
         setAppInfo(appConfig.data);
         setRetries(0);
         setIsServerOnline(true);
@@ -58,7 +62,7 @@ export const AppContextDataProvider = (
       }
     })();
   }, [retries, isServerOnline])
-  
+
   const value = {
     theme, setTheme, deactivatePlayer,
     appInfo, toggleModal, setToggleModal,

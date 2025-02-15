@@ -37,6 +37,7 @@ export default function Dashboard() {
       setappState(prev => ({...prev, error: false, loading: true }));
       if (retries >= 5) return;
       try {
+        await appService.logout();
         const audioData = await appService.fetchAudios();
         const data = audioData.data.docs;
         const sortedAudios =  data?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -103,7 +104,7 @@ export default function Dashboard() {
               }
 
               <a
-              href='#recent'
+              href='#featured'
               className={`${searchQuery ? 'hidden' : ''} bg-sky-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-sky-700 transition-colors`}>
                 Start Listening Now
               </a>
@@ -127,7 +128,7 @@ export default function Dashboard() {
 
       <a href="#home"
         className={`${!intersecting.isIntersecting ? 'fixed' : 'hidden'} bottom-10 right-5 shadow-md border-gray-600 focus:outline-none border-2 animate-pulse rounded-full w-8 h-8 grid place-content-center hover:bg-black hover:text-white transition-colors`}>
-        <ArrowBigUp className='' />
+        <ArrowBigUp className='text-black' />
       </a>
 
     </div>

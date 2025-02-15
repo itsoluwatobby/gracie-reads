@@ -40,7 +40,7 @@ export function AudiobookCard(
 
   return (
     <Link
-      to={bookId}
+      to={`/${bookId}`}
       className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-[1.02]">
       <img src={`${BASE_URL}/${thumbnail}`} alt={title} className="w-full h-40 object-cover" />
       <div className="p-3">

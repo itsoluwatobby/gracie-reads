@@ -5,18 +5,34 @@ import {
   AudioRating,
   BookRecommendations,
 } from "../components/AudioBook";
-import { AiOutlineHeart } from "react-icons/ai";
-// import { PageHeader } from "../components";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../app/app.config";
 import { appService } from "../app/appService";
 import toast from "react-hot-toast";
 import { Button } from "../components/AudioBook";
+import { helper } from "../utils";
 
 export default function BookPage() {
   const { bookId } = useParams();
   const navigate = useNavigate()
+  const [currentUser, setCurrentUser] = useState('');
   const [audioBook, setAudioBook] = useState<AudioSchema>();
+  const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [appState, setAppState] = useState<AppState>(
+    {
+      loading: false,
+      error: false,
+      errMsg: ''
+    }
+  );
+
+  const { loading } = appState!;
+
+  useEffect(() => {
+    if (!currentUser || !audioBook?.likes) return;
+    setIsLiked(audioBook?.likes.includes(currentUser));
+  }, [currentUser, audioBook?.likes])
 
   useEffect(() => {
     if (!bookId) return;
@@ -24,6 +40,9 @@ export default function BookPage() {
     (async () => {
       try {
         const audioData = await appService.getAudio(bookId);
+        const user = await appService.getUser();
+        // console.log(user)
+        setCurrentUser(user.data.ipAddress);
         setAudioBook(audioData.data);
       } catch (err: unknown) {
         const error = err as any;
@@ -32,6 +51,33 @@ export default function BookPage() {
       }
     })();
   }, [bookId])
+
+  const toggleLike = async () => {
+    if (loading) return;
+    try {
+      setAppState((prev) => ({ ...prev, loading: true }));
+      const audio = await appService.likeAudio(bookId as string);
+      setAudioBook(audio.data);
+    } catch (err: unknown) {
+      const error = err as any;
+      const message = error.response?.data?.error?.message || error?.message;
+      setAppState((prev) => ({ ...prev, error: true, errMsg: message }));
+      toast.error(message);
+    } finally {
+      setAppState((prev) => ({ ...prev, loading: false }));
+    }
+  }
+
+  const rateAudiobook = async (rating: number) => {
+    try {
+      const audio = await appService.rateAudiobook({ audioId: bookId!, rating });
+      setAudioBook(audio.data);
+    } catch (err: unknown) {
+      const error = err as any;
+      const message = error.response?.data?.error?.message || error?.message;
+      toast.error(message);
+    }
+  }
 
   return (
     <div
@@ -61,7 +107,7 @@ export default function BookPage() {
           <section className="flex flex-col justify-between h-full w-full">
             <div className="mt-12 flex flex-col gap-2">
               <p className='capitalize font-medium flex-wrap'>By: <span className="">{audioBook?.author}</span></p>
-              <p className='flex items-center gap-1 overflow-hidden flex-wrap text-[13px]'>
+              <div className='flex items-center gap-1 overflow-hidden flex-wrap text-[13px]'>
                 <span>Categories:</span>
                 <div className='pl-1 flex items-center flex-wrap gap-1'>
                   {
@@ -70,12 +116,30 @@ export default function BookPage() {
                     ))
                   }
                 </div>
-              </p>
+              </div>
             </div>
 
             <div className="flex items-center justify-between text-xl w-full pr-3">
-              <AudioRating rating={audioBook?.rating as number} />
-              <AiOutlineHeart className='hover:scale-[1.04] active:scale-[1] transition-all cursor-pointer' />
+              <AudioRating
+                rateAudiobook={rateAudiobook}
+                rating={audioBook?.rating as Rating[]}
+              />
+
+              <div className="flex gap-0.5">
+                {
+                  isLiked ?
+                    <AiFillHeart
+                      onClick={toggleLike}
+                      className={`hover:scale-[1.04] active:scale-[1] transition-all cursor-pointer text-sky-500 ${loading ? 'animate-pulse' : ''}`}
+                      />
+                    :
+                    <AiOutlineHeart
+                      onClick={toggleLike}
+                      className={`hover:scale-[1.04] active:scale-[1] transition-all cursor-pointer text-sky-400 ${loading ? 'animate-pulse' : ''}`}
+                    />
+                }
+                <span className="self-end text-gray-600 text-sm">{helper.checkCount(audioBook?.likes)}</span>
+              </div>
             </div>
           </section>
 

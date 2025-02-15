@@ -23,6 +23,18 @@ export const Paths = {
     endpoint: `${AudioBasePath}/delete`,
     method: HTTPMethods.DELETE,
   },
+  likeAudio: {
+    endpoint: `${AudioBasePath}/like`,
+    method: HTTPMethods.PATCH,
+  },
+  rateAudio: {
+    endpoint: `${AudioBasePath}/rate`,
+    method: HTTPMethods.PUT,
+  },
+  getUser: {
+    endpoint: `${AudioBasePath}/user`,
+    method: HTTPMethods.GET,
+  },
 };
 
 const ChapterBasePath = 'api/v1/chapter';
@@ -57,6 +69,10 @@ export const AppConfigPaths = {
   },
   login: {
     endpoint: `${AppConfigBasePath}/login`,
+    method: HTTPMethods.POST,
+  },
+  logout: {
+    endpoint: `${AppConfigBasePath}/logout`,
     method: HTTPMethods.POST,
   },
 };
