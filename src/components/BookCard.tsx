@@ -14,7 +14,7 @@ type BookCardProps = {
   author: string;
   bookId: string;
   chapterId: string;
-  setReload: React.Dispatch<React.SetStateAction<number>>;
+  setReload?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export function AudiobookCard(
@@ -42,7 +42,7 @@ export function AudiobookCard(
     try {
       setLoading(true)
       await appService.deleteAudio(bookId);
-      setReload((prev) => prev + 1);
+      (setReload!)((prev) => prev + 1);
       toast.success('Audiobook deleted');
     } catch (err: unknown) {
       const error = err as any;
