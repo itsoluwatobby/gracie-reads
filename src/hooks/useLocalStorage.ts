@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { helper } from '../utils/helpers';
+import { CacheKeys } from "../utils";
+
+export type CachedKeyTypes = typeof CacheKeys[keyof typeof CacheKeys];
 
 export const useLocalStorage= () => {
 
-  function getCachedData<T>(key: string){
+  function getCachedData<T>(key: CachedKeyTypes){
     const val = localStorage.getItem(key);
     return helper.jsonParseValue<T>(val!);
   }
 
-  function cacheData<T>(key: string, data: T){
+  function cacheData<T>(key: CachedKeyTypes, data: T){
     try {
       // const dup = getCachedData(key);
       // if (dup) return;
@@ -18,7 +21,7 @@ export const useLocalStorage= () => {
     }
   }
   
-  function clearCache(key: string){
+  function clearCache(key: CachedKeyTypes){
     localStorage.removeItem(key);
   }
 

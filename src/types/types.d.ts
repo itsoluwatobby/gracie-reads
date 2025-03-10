@@ -78,6 +78,8 @@ type Episode = {
   _id: string;
   episode: number;
   filename: string;
+  link: string;
+  assetId?: string;
   duration: string;
 }
 
@@ -151,3 +153,5 @@ type CredentialProp = {
   email:  string;
   password: string;
 }
+
+type ToggleGenreButton = 'add' | 'delete'

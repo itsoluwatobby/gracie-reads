@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../../hooks";
 import { CgPlayButton, CgPlayPause } from "react-icons/cg";
 import { IoReload } from "react-icons/io5";
-import { STREAM_URI } from "../../app/app.config";
+// import { STREAM_URI } from "../../app/app.config";
 import toast from "react-hot-toast";
 import ProgressBar from "./ProgressBar";
 
@@ -30,7 +30,7 @@ export default function MediaPlayer({ episode }: MediaPlayerProps) {
   useEffect(() => {
     if (audioRef.current?.src?.includes('stream')) {
       audioRef.current?.addEventListener('error', (e) => {
-        console.log(e)
+        // console.log(e)
         toast.error(`Error loading chapter: ${e.message}`);
       });
     }
@@ -47,8 +47,8 @@ export default function MediaPlayer({ episode }: MediaPlayerProps) {
       if (audioRef.current) {
         audioRef.current.removeEventListener('ended', deactivatePlayer);
         audioRef.current.removeEventListener('canplay', canPlay);
-        audioRef.current?.removeEventListener('error', (e) => {
-          console.log(e.error)
+        audioRef.current?.removeEventListener('error', () => {
+          // console.log(e.error)
           toast.error('Error loading chapter');
         });
       }
@@ -87,7 +87,7 @@ export default function MediaPlayer({ episode }: MediaPlayerProps) {
   const audioTrigger = (play: boolean) => {
     if (!audioRef.current || !audioSource || !episode.filename) return;
     if (play && episode.filename && !audioSource) {
-      const link = `${STREAM_URI}/${episode.filename}`;
+      const link = episode.link;
       audioRef.current.src = link;
       setMediaPlayer(prev => ({ ...prev, audioSource: link }))
     }

@@ -11,22 +11,19 @@ import { useNavigate } from "react-router-dom";
 import { appService } from "../app/appService";
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import ChapterUploader from "../components/PostAudioBook/ChapterUploader";
-import { helper } from "../utils";
 
 export default function PostAudioBook() {
-  const { clearCache, cacheData, getCachedData } = useLocalStorage()
+  const { clearCache, cacheData, getCachedData } = useLocalStorage();
   const [file, setFile] = useState<File | null>(null);
   const [currentSession, setCurrentSession] = useState<SESSION>(getCachedData<SESSION>(CacheKeys.session));
   const [audiobook, setAudiobook] = useState<AudioSchema>(InitAudioBookState);
   const [audioGenre, setAudioGenre] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  
+
   // create session whenever page is visited
   const { author, title, about } = audiobook;
-  // reference,
 
-  
   useEffect(() => {
     if (!currentSession?.sessionId) {
       const sessionId = nanoid();
@@ -42,6 +39,7 @@ export default function PostAudioBook() {
       setAudioGenre(data?.genre ?? []);
       setAudiobook({ ...data });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -68,33 +66,36 @@ export default function PostAudioBook() {
       },
     };
     cacheData(CacheKeys.session, data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audioGenre])
 
-  // const canSubmit = [title, author, note, audiobook.thumbnail].every(Boolean);
-  
-  // const submitForm = async (e: FormEvent<HTMLFormElement>) => {
-  const submitForm = async () => {
-    // e.preventDefault();
-    if (isLoading) return;
+  const canSubmit = [title, author, file].every(Boolean);
 
-    const formData = new FormData();
-    formData.append('chapterId', audiobook.chapterId);
-    formData.append('title', title);
-    formData.append('author', author);
-    formData.append('about', about ?? '');
-    formData.append('genre', helper.stringifyData(audioGenre));
-    // formData.append('note', audiobook?.note ?? null);
-    formData.append('thumbnail', file!);
-    // formData.append('reference', helper.stringifyData(audiobook?.reference ?? {}));
+  const submitForm = async () => {
+    if (isLoading || !canSubmit) return;
+
+    const body = {
+      chapterId: audiobook.chapterId,
+      thumbnail: '', title, about: about ?? '',
+      author, genre: audioGenre,
+      // note: audiobook?.note,
+      // reference: audiobook?.reference,
+    };
 
     try {
-      if (isLoading) return;
-  
+      const formData = new FormData();
+      formData.append('file', file!);
+      formData.append('upload_preset', 'gracie-thumbnail-preset');
       setIsLoading(true);
-      const audio = await appService.createAudio(formData);
-      
+
+      const thumbnailUpload = await appService.uploadThumbnailCloudinary(formData);
+      body.thumbnail = thumbnailUpload.secureUrl;
+
+      const audio = await appService.createAudio(body);
+
       setAudiobook(InitAudioBookState);
       clearCache(CacheKeys.session);
+
       setAudioGenre([]);
       navigate(`/${audio.data?._id}`);
       toast.success('Audio book uploaded');
@@ -121,17 +122,17 @@ export default function PostAudioBook() {
           hidden
           disabled={isLoading}
           onChange={handleFileChange}
-          />
+        />
 
         <label htmlFor="thumbnail-file-upload"
-        className='bg-gray-700 grid place-content-center text-3xl rounded-md w-28 h-28'>
+          className='bg-blue-200 grid place-content-center text-3xl rounded-md w-32 h-32 border border-blue-600'>
           {
             file ?
               <img src={URL.createObjectURL(file)} alt="thumbnail" loading="eager"
                 className='w-32 rounded-md h-32 object-cover'
               />
               : <AiOutlinePicture />
-            }
+          }
         </label>
 
         <div className="flex items-center gap-4 maxMobile:flex-col w-full">
@@ -140,18 +141,18 @@ export default function PostAudioBook() {
             value={title}
             disabled={isLoading}
             handleChange={handleChange}
-            />
+          />
           <Input
             name='author'
             value={author}
             disabled={isLoading}
             handleChange={handleChange}
-            />
+          />
         </div>
 
         <Genres audioGenre={audioGenre} setAudioGenre={setAudioGenre} />
 
-        <ChapterUploader 
+        <ChapterUploader
           cacheData={cacheData}
           currentSession={currentSession}
           setAudiobook={setAudiobook}
@@ -164,15 +165,15 @@ export default function PostAudioBook() {
           rows={4}
           disabled={isLoading}
           onChange={handleChange}
-          className="resize-none px-3 py-1 rounded text-black focus:border-none focus:outline-none focus:ring-0 w-full"
+          className="resize-none px-3 py-1 rounded text-black border border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-0 w-full"
         />
 
         <div className={`mt-5 self-center w-32 flex items-center bg-cyan-500 rounded h-10 relative`}>
           <button
             type='button'
             onClick={submitForm}
-            // disabled={!canSubmit || isLoading}
-            className={`z-10 w-full h-full rounded-md absolute top-0 grid place-content-center -translate-x-0.5 -translate-y-0.5 transition-transform active:-translate-x-0 active:translate-y-0 ${Colors.navy} border border-cyan-300`}
+            disabled={!canSubmit || isLoading}
+            className={`z-10 w-full h-full rounded-md absolute top-0 grid place-content-center transition-transform active:-translate-x-0 active:translate-y-0 ${canSubmit ? `${Colors.navy} -translate-x-0.5 -translate-y-0.5` : Colors.lightestNavy} border border-cyan-300`}
           >
             Submit{isLoading ? 'ing...' : ''}
           </button>

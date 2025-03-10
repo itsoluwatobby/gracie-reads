@@ -1,17 +1,45 @@
-import { AxiosProgressEvent } from "axios";
+import { AxiosProgressEvent, AxiosRequestConfig } from "axios";
 import { appRequest } from "./app.config";
+import axios from 'axios'
 import { AppConfigPaths, ChapterPaths, Paths } from "./path.resource";
 
+type ChapterUpload = {
+  sessionId: string;
+  chapter: {
+    episode: string;
+    duration: string;
+    filename: string;
+    publicId: string;
+    link: string;
+  },
+}
+
+type AudioUpload = {
+  chapterId: string;
+  thumbnail: string;
+  author: string;
+  genre: string[];
+  note?: string;
+  about: string;
+  title: string;
+  reference?: {
+      siteName: string;
+      link: string;
+  };
+}
+
+type UpdateAppConfigProp = {
+  name: string;
+  channel: string;
+  genres: string[];
+}
+
 class AppService {
-  async createAudio(formdata: FormData) {
-    const result = await appRequest<FormData, ResponseData<AudioSchema>>(
+  async createAudio(data: AudioUpload) {
+    const result = await appRequest<AudioUpload, ResponseData<AudioSchema>>(
       Paths.create.endpoint,
-      formdata,
+      data,
       Paths.create.method,
-      'json',
-      {},
-      () => {},
-      { 'Content-Type': 'multipart/form-data' },
     );
     return result.data;
   }
@@ -114,19 +142,64 @@ class AppService {
     return result.data;
   }
 
-  async uploadAudio(formdata: FormData, setUploadProgress: React.Dispatch<React.SetStateAction<number>>) {
+  async uploadThumbnailCloudinary(formdata: FormData,): Promise<{ secureUrl: string, publicId: string }>
+  {
+    const uploadUrl = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+    const config: AxiosRequestConfig = {
+      url: uploadUrl,
+      method: 'POST',
+      data: formdata,
+      headers: { 'Content-Type': 'multipart/form-data' },
+    };
+
+    const result = await axios(config);
+    const data = result?.data;
+    return {
+      secureUrl: data.secure_url,
+      publicId: data.public_id,
+    };
+  }
+  
+  async uploadAudioToCloudinary(
+    formdata: FormData,
+    setUploadProgress: React.Dispatch<React.SetStateAction<number>>,
+  ): Promise<{ playbackUrl: string, publicId: string, filename: string }>
+  {
+    const uploadUrl = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/video/upload`;
+
     const uploadProgress = (progressEvent: AxiosProgressEvent) => {
       const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total!);
       setUploadProgress(percentCompleted);
     };
-    const result = await appRequest<FormData, ResponseData<Chapter>>(
+
+    const config: AxiosRequestConfig = {
+      url: uploadUrl,
+      method: 'POST',
+      data: formdata,
+      headers: { 'Content-Type': 'multipart/form-data' },
+      params: {},
+      responseType: 'json',
+      onUploadProgress: uploadProgress,
+    };
+
+    const result = await axios(config);
+    const data = result?.data;
+
+    return {
+      playbackUrl: data.secure_url,
+      filename: data.original_filename,
+      publicId: data.public_id,
+    };
+  }
+  
+  async uploadAudio(data: ChapterUpload) {
+
+    const result = await appRequest<ChapterUpload, ResponseData<Chapter>>(
       Paths.upload.endpoint,
-      formdata,
+      data,
       Paths.upload.method,
       'json',
-      {},
-      uploadProgress,
-      { 'Content-Type': 'multipart/form-data' },
     );
 
     return result.data;
@@ -142,10 +215,10 @@ class AppService {
     return result.data
   }
 
-  async updateAppConfig() {
-    const result = await appRequest<Partial<AppConfig>, ResponseData<AppConfig>>(
+  async updateAppConfig(body: Partial<UpdateAppConfigProp>) {
+    const result = await appRequest<Partial<UpdateAppConfigProp>, ResponseData<UpdateAppConfigProp>>(
       AppConfigPaths.updateAppConfig.endpoint,
-      {},
+      body,
       AppConfigPaths.updateAppConfig.method,
     );
 

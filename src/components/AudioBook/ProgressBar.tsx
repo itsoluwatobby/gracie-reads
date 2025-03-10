@@ -11,13 +11,15 @@ export default function ProgressBar({ audioRef }: ProgressBarProps) {
   useEffect(() => {
     const audio = document.getElementById('audioRef') as HTMLAudioElement;
     const handleTimeUpdate = () => {
-      if (!audioRef?.current) return;
-      const currentTimeInSeconds = audioRef.current.currentTime;
-      const length = audioRef.current.duration;
-      const progress = audioRef.current.duration ? (currentTimeInSeconds / audioRef.current.duration) * 100 : 0;
-      setMediaProgress(progress);
-      setCurrentTime(currentTimeInSeconds);
-      setDuration(length);
+      // audioRef.current?.addEventListener('load', () => {
+      if (audioRef?.current) {
+        const currentTimeInSeconds = audioRef.current.currentTime;
+        const length = audioRef.current.duration;
+        const progress = audioRef.current.duration ? (currentTimeInSeconds / audioRef.current.duration) * 100 : 0;
+        setMediaProgress(progress);
+        setCurrentTime(currentTimeInSeconds);
+        setDuration(length);
+      };
     };
 
     audio.addEventListener('timeupdate', handleTimeUpdate);

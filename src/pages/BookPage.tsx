@@ -7,26 +7,23 @@ import {
 } from "../components/AudioBook";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useEffect, useState } from "react";
-import { BASE_URL } from "../app/app.config";
 import { appService } from "../app/appService";
 import toast from "react-hot-toast";
 import { Button } from "../components/AudioBook";
 import { helper } from "../utils";
+import { initAppState } from "../utils/initStates";
 
 export default function BookPage() {
+  const MaxAudioStoryLength = 680;
   const { bookId } = useParams();
   const navigate = useNavigate()
   const [currentUser, setCurrentUser] = useState('');
   const [audioBook, setAudioBook] = useState<AudioSchema>();
   const [isLiked, setIsLiked] = useState<boolean>(false);
-  const [appState, setAppState] = useState<AppState>(
-    {
-      loading: false,
-      error: false,
-      errMsg: ''
-    }
-  );
-
+  const [viewMore, setViewMore] = useState<boolean>(false);
+  const [canviewMore, setCanViewMore] = useState<boolean>(false);
+  const [appState, setAppState] = useState<AppState>(initAppState);
+  
   const { loading } = appState!;
 
   useEffect(() => {
@@ -41,9 +38,10 @@ export default function BookPage() {
       try {
         const audioData = await appService.getAudio(bookId);
         const user = await appService.getUser();
-        // console.log(user)
+
         setCurrentUser(user.data.ipAddress);
         setAudioBook(audioData.data);
+        setCanViewMore((audioData.data.about!).length > MaxAudioStoryLength);
       } catch (err: unknown) {
         const error = err as any;
         const message = error.response?.data?.error?.message || error?.message;
@@ -97,7 +95,7 @@ export default function BookPage() {
           <figure className='flex-none bg-gray-200 rounded-md w-40 h-44 mobile:h-36 mobile:w-28'>
             {
               audioBook?.thumbnail ?
-                <img src={`${BASE_URL}/${audioBook.thumbnail}`} alt={audioBook.title}
+                <img src={audioBook.thumbnail} alt={audioBook.title}
                   className='w-full rounded-md h-full object-cover'
                 />
                 : null
@@ -119,7 +117,7 @@ export default function BookPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-xl w-full pr-3">
+            <div className="flex items-center maxMobile:mt-2 justify-between text-xl w-full pr-3">
               <AudioRating
                 rateAudiobook={rateAudiobook}
                 rating={audioBook?.rating as Rating[]}
@@ -145,10 +143,19 @@ export default function BookPage() {
 
         </article>
 
-        <div className="flex flex-col capitalize text-base">
+        <div className={`flex flex-col capitalize text-base`}>
           <h5 className="font-semibold">About:</h5>
-          <p className="first-letter:capitalize text-[13px] indent-3 text-justify">{audioBook?.about}</p>
+          <p 
+          onClick={() => setViewMore((prev) => !prev)}
+          className={`first-letter:capitalize p-2 text-[12px] indent-3 text-justify ${viewMore ? 'h-64 overflow-y-scroll' : ''}`}>{viewMore ? audioBook?.about : helper.reduceTextLength(audioBook?.about ?? '', MaxAudioStoryLength)}</p>
         </div>
+
+        {
+          canviewMore ?
+          <span className="underline underline-offset-2 self-center -mt-4 cursor-pointer text-blue-500 text-xs"
+          onClick={() => setViewMore((prev) => !prev)}
+          >{viewMore ? 'view less' : 'view more'}</span> : null
+        }
       </div>
 
       <AudioBookPlayer chapterId={audioBook?.chapterId as string} />

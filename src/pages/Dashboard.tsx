@@ -27,6 +27,7 @@ export default function Dashboard() {
       loading: false, error: false, errMsg: ''
     }
   );
+  const [reload, setReload] = useState<number>(0)
   const [audios, setAudios] = useState<AudioTypes>(
     { recent: [], featured: [] }
   );
@@ -37,7 +38,7 @@ export default function Dashboard() {
       setappState(prev => ({...prev, error: false, loading: true }));
       if (retries >= 5) return;
       try {
-        await appService.logout();
+        // await appService.logout();
         const audioData = await appService.fetchAudios();
         const data = audioData.data.docs;
         const sortedAudios =  data?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -50,6 +51,7 @@ export default function Dashboard() {
         setAudios({ recent, featured: sortedAudios }); 
         setappState({ error: false, errMsg: '', loading: false });
         setRetries(0);
+        setReload(0);
       } catch (err: unknown) {
         setRetries((prev) => prev + 1);
         const error = err as any;
@@ -58,7 +60,7 @@ export default function Dashboard() {
         toast.error(message);
       }
     })()
-  }, [retries, isServerOnline])
+  }, [retries, reload, isServerOnline])
   
   useEffect(() => {
     if (searchQuery) {
@@ -119,11 +121,13 @@ export default function Dashboard() {
       <SectionedCards sectionTitle='recent'
         appState={appState}
         audios={audios.recent}
+        setReload={setReload!}
       />
   
       <SectionedCards sectionTitle='featured'
       appState={appState}
       audios={audios.featured}
+      setReload={setReload!}
       />
 
       <a href="#home"

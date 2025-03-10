@@ -7,9 +7,10 @@ type SectionedCardsProps = {
   sectionTitle: string;
   audios: AudioSchema[];
   appState: AppState;
+  setReload?: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export default function SectionedCards({ sectionTitle, audios, appState }: SectionedCardsProps) {
+export default function SectionedCards({ sectionTitle, audios, appState, setReload }: SectionedCardsProps) {
   const [isAvailable, setisAvailable] = useState(true);
 
   useEffect(() => {
@@ -69,6 +70,7 @@ export default function SectionedCards({ sectionTitle, audios, appState }: Secti
                       title={book.title}
                       thumbnail={book.thumbnail}
                       chapterId={book.chapterId}
+                      setReload={setReload!}
                     />
                   ))
                 }

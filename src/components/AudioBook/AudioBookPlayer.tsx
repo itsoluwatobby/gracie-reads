@@ -10,30 +10,37 @@ import MediaPlayer from "./MediaPlayer";
 import MediaSpeed from "./MediaSpeed";
 import { useAppContext } from "../../hooks";
 import { appService } from "../../app/appService";
-import { STREAM_URI } from "../../app/app.config";
+// import { STREAM_URI } from "../../app/app.config";
 import toast from "react-hot-toast";
+import { initAppState } from "../../utils/initStates";
 
 type AudioBookPlayerProps = {
   chapterId: string;
 }
+
 export default function AudioBookPlayer({ chapterId }: AudioBookPlayerProps) {
   const [episode, setEpisode] = useState<Episode | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { deactivatePlayer, setMediaPlayer } = useAppContext()
   const [chapter, setChapter] = useState<Chapter>();
   const [episodeLength, setEpisodeLength] = useState<number>();
+  const [appStateBook, setAppStateBook] = useState<AppState>(initAppState);
 
   useEffect(() => {
     if (!chapterId) return;
     (async () => {
       try {
+        setAppStateBook((prev) => ({ ...prev, loading: true }));
         const chapter = await appService.getAudioChapterById(chapterId);
         setChapter(chapter.data);
         setEpisodeLength(chapter.data.chapters.length);
       } catch (err: unknown) {
         const error = err as any;
         const message = error.response?.data?.error?.message || error?.message;
+        setAppStateBook((prev) => ({ ...prev, error: true, errMsg: message }));
         toast.error(message);
+      } finally {
+        setAppStateBook((prev) => ({ ...prev, loading: false }));
       }
     })();
   }, [chapterId])
@@ -56,7 +63,8 @@ export default function AudioBookPlayer({ chapterId }: AudioBookPlayerProps) {
         toast.success(`Up Next Episode ${nextEpisode.episode}`, { duration: 5000 });
         setCurrentIndex(nextIndex);
         setEpisode(nextEpisode)
-        setMediaPlayer((prev) => ({ ...prev, audioSource: `${STREAM_URI}/${nextEpisode.filename}` }));
+        setMediaPlayer((prev) => ({ ...prev, audioSource: nextEpisode.link }));
+        // setMediaPlayer((prev) => ({ ...prev, audioSource: `${STREAM_URI}/${nextEpisode.filename}` }));
       }
     }
 
@@ -66,7 +74,6 @@ export default function AudioBookPlayer({ chapterId }: AudioBookPlayerProps) {
       audio?.removeEventListener('ended', playNextChapter);
     }
   }, [chapterIds, episode, chapter, deactivatePlayer, setMediaPlayer])
-      
 
   const navigateChapters = (type: ArrowDirection) => {
     let index = currentIndex;
@@ -118,6 +125,7 @@ export default function AudioBookPlayer({ chapterId }: AudioBookPlayerProps) {
         episode={episode!}
         setEpisode={setEpisode}
         setCurrentIndex={setCurrentIndex}
+        loading={appStateBook.loading}
       />
 
     </div>

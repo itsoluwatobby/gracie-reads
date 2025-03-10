@@ -26,3 +26,9 @@ export const InitAudioBookState: AudioSchema = {
     link: '',
   },
 }
+
+export const initAppState = {
+  loading: false,
+  error: false,
+  errMsg: ''
+};

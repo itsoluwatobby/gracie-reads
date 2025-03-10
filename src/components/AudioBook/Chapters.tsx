@@ -1,6 +1,8 @@
 import React, { useCallback } from "react";
 import { useAppContext } from "../../hooks";
-import { STREAM_URI } from "../../app/app.config";
+import { helper } from "../../utils";
+import ChapterLoading from "../ChapterLoading";
+// import { STREAM_URI } from "../../app/app.config";
 
 type ChaptersProps = {
   episodes: Episode[];
@@ -8,12 +10,13 @@ type ChaptersProps = {
   episode: Episode;
   setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
   setEpisode: React.Dispatch<React.SetStateAction<Episode | null>>;
+  loading: boolean;
 }
 
 export default function Chapters(
   {
     episodes, episode, chapterIds,
-    setEpisode, setCurrentIndex,
+    setEpisode, setCurrentIndex, loading,
   }: ChaptersProps
 ) {
   const { setMediaPlayer } = useAppContext()
@@ -27,26 +30,34 @@ export default function Chapters(
 
   return (
     <div className="customScrollBar flex md:w-[80%] md:mx-auto flex-col gap-1 transition-colors rounded max-h-[18rem] shadow-inner p-1 overflow-y-scroll">
-      {
-        episodes?.map((chapter, index) => (
-          <article
-          key={chapter._id}
-          id={chapter._id}
-          ref={scrollIntoView}
-          onClick={() => {
-            setEpisode(chapter)
-            setCurrentIndex(chapterIds.indexOf(chapter.episode));
-            setMediaPlayer((prev) => ({ ...prev, audioSource: `${STREAM_URI}/${chapter.filename}` }));
-          }}
-          className={`flex items-center justify-between text-sm ${chapter._id === episode?._id ? 'bg-sky-100' : 'hover:bg-sky-50'} cursor-pointer rounded px-1.5 py-3 last:border-b-0 border-b border-b-gray-700`}
-          >
-            <p className="flex items-center gap-6">
-              <span className="self-start">{padNumber((index + 1).toString())}.</span>
-              <span>{chapter.filename}</span>
-            </p>
-            <span className="text-[13px] text-gray-700">{chapter.duration}</span>
-          </article>
-        ))
+     {
+      loading ? 
+        <ChapterLoading />
+      :
+      <>
+        {
+          episodes?.map((chapter, index) => (
+            <article
+            key={chapter._id}
+            id={chapter._id}
+            ref={scrollIntoView}
+            onClick={() => {
+              setEpisode(chapter)
+              setCurrentIndex(chapterIds.indexOf(chapter.episode));
+              setMediaPlayer((prev) => ({ ...prev, audioSource: chapter.link }));
+              // setMediaPlayer((prev) => ({ ...prev, audioSource: `${STREAM_URI}/${chapter.link}` }));
+            }}
+            className={`flex items-center justify-between text-sm ${chapter._id === episode?._id ? 'bg-sky-100' : 'hover:bg-sky-50'} cursor-pointer rounded px-1.5 py-3 last:border-b-0 border-b border-b-gray-700`}
+            >
+              <p className="flex items-center gap-6">
+                <span className="self-start">{padNumber((index + 1).toString())}.</span>
+                <span>{helper.reduceTextLength(chapter.filename, 20)}</span>
+              </p>
+              <span className="text-[13px] text-gray-700">{chapter.duration}</span>
+            </article>
+          ))
+        }
+      </>
       }
     </div>
   )
