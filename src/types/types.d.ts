@@ -155,3 +155,26 @@ type CredentialProp = {
 }
 
 type ToggleGenreButton = 'add' | 'delete'
+
+type PaginatedQueryResponseType = {
+  page: number;
+  limit: number;
+  totalDocs: number;
+  totalPages: number;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  prevPage: number;
+  nextPage: number;
+}
+
+type PaginatedQueryType = {
+  page: number;
+  limit: number;
+  isPublic: boolean;
+}
+
+type AudioTypes = {
+  recent: AudioSchema[];
+  featured: AudioSchema[];
+}

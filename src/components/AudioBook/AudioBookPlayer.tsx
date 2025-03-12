@@ -93,7 +93,7 @@ export default function AudioBookPlayer({ chapterId }: AudioBookPlayerProps) {
   return (
     <div className="flex flex-col text-sm gap-8 h-auto rounded">
 
-      <section className="self-center flex flex-col bg-white p-4 shadow-sm gap-5 rounded md:w-1/2">
+      <section className="self-center flex flex-col bg-white p-4 shadow-sm gap-5 rounded md:w-[51%]">
         <span className="self-center">Chapter {episode?.episode.toString().padStart(2,'0') ?? '-----'}</span>
 
         <MediaSpeed />

@@ -32,3 +32,21 @@ export const initAppState = {
   error: false,
   errMsg: ''
 };
+
+export const PaginatedQuery = {
+  page: 1,
+  limit: 10,
+  isPublic: true,
+};
+
+export const PaginatedQueryResponse = {
+  page: 0,
+  limit: 0,
+  totalDocs: 0,
+  totalPages: 0,
+  pagingCounter: 1,
+  hasPrevPage: false,
+  hasNextPage: false,
+  prevPage: 0,
+  nextPage: 0
+};

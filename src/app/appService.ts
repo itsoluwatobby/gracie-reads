@@ -2,6 +2,7 @@ import { AxiosProgressEvent, AxiosRequestConfig } from "axios";
 import { appRequest } from "./app.config";
 import axios from 'axios'
 import { AppConfigPaths, ChapterPaths, Paths } from "./path.resource";
+import { PaginatedQuery } from "../utils/initStates";
 
 type ChapterUpload = {
   sessionId: string;
@@ -122,11 +123,23 @@ class AppService {
     // await deleteDoc(doc(this.AudioSchemaDB, this.audioSchema, id));
   // } 
 
-  async fetchAudios() {
-    const result = await appRequest<unknown, ResponseData<{ docs: AudioSchema[] }>>(
+  async fetchAudios(query: typeof PaginatedQuery) {
+    const result = await appRequest<unknown, ResponseData<{ docs: AudioSchema[] } & PaginatedQueryResponseType>>(
       Paths.getAllAudios.endpoint,
       {},
       Paths.getAllAudios.method,
+      'json',
+      query,
+    );
+
+    return result.data;
+  }
+  
+  async fetchRecommendedAudios() {
+    const result = await appRequest<unknown, ResponseData<AudioSchema[]>>(
+      Paths.getAudioRecommendations.endpoint,
+      {},
+      Paths.getAudioRecommendations.method,
     );
 
     return result.data;

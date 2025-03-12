@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAppContext } from "../hooks";
 import { useEffect, useState } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import { CacheKeys } from "../utils";
+import { CacheKeys, PageRoutes } from "../utils";
 import { appService } from "../app/appService";
 
 export default function PostPageLayout() {
@@ -21,7 +21,7 @@ export default function PostPageLayout() {
   return (
     <>
       {
-        !loggedIn ? <Navigate to={'/unauthorised'} /> : <Outlet />
+        !loggedIn ? <Navigate to={PageRoutes.unauthorised} /> : <Outlet />
       }
     </>
   )

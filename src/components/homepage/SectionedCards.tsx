@@ -1,4 +1,4 @@
-import { ChevronRight, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { AudiobookCard } from '../BookCard'
 import { MdErrorOutline } from "react-icons/md";
 import { useEffect, useState } from 'react';
@@ -33,13 +33,13 @@ export default function SectionedCards({ sectionTitle, audios, appState, setRelo
           <Star className="text-sky-600 mr-2" />
           <h2 className="text-2xl capitalize font-bold text-gray-800">{sectionTitle} Audiobooks</h2>
         </div>
-        {
+        {/* {
           isAvailable 
             ? <button className="flex items-center text-sky-600 hover:text-sky-700">
           View all <ChevronRight size={20} />
           </button>
           : null
-        }
+        } */}
       </div>
       {
         appState?.loading 

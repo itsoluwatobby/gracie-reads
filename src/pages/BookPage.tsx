@@ -80,7 +80,7 @@ export default function BookPage() {
   return (
     <div
       id={bookId}
-      className='h-auto w-full flex flex-col text-black px-10 maxMobile:px-5 py-8 gap-12 mx-auto lg:w-[80%]'>
+      className='h-auto w-full flex flex-col bg-gradient-to-b from-sky-100 to-white text-black px-10 maxMobile:px-5 py-8 gap-12 mx-auto lg:w-[70%]'>
 
       {/* <PageHeader /> */}
       <div className="-mt-4 -mb-5 w-fit">

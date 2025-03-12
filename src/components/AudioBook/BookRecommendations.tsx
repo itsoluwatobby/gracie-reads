@@ -37,8 +37,8 @@ export default function BookRecommendations({ currentBookId }: BookRecommendatio
       setappState(prev => ({...prev, error: false, loading: true }));
 
       try {
-        const audioData = await appService.fetchAudios();
-        const data = audioData.data.docs;
+        const audioData = await appService.fetchRecommendedAudios();
+        const data = audioData.data;
         const sortedAudios =  data?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
         const recommendedAudios = sortedAudios.filter((audio) => audio._id !== currentBookId);

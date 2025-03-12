@@ -19,6 +19,10 @@ export const Paths = {
     endpoint: `${AudioBasePath}/`,
     method: HTTPMethods.GET,
   },
+  getAudioRecommendations: {
+    endpoint: `${AudioBasePath}/recommendations`,
+    method: HTTPMethods.GET,
+  },
   delete: {
     endpoint: `${AudioBasePath}/delete`,
     method: HTTPMethods.DELETE,

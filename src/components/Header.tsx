@@ -3,7 +3,7 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAppContext } from '../hooks/useAppContext';
 import { BookOpen, Lock } from 'lucide-react';
-import { CacheKeys } from "../utils";
+import { CacheKeys, PageRoutes } from "../utils";
 import { useEffect, useState } from 'react';
 
 type HeaderProps = {
@@ -14,7 +14,7 @@ type HeaderProps = {
 export default function Header({ appName, setIsLoginModalOpen }: HeaderProps) {
   const { pathname } = useLocation();
   const { appInfo } = useAppContext();
-  const { getCachedData } = useLocalStorage();
+  const { getCachedData, clearCache } = useLocalStorage();
   
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(false);
@@ -24,16 +24,17 @@ export default function Header({ appName, setIsLoginModalOpen }: HeaderProps) {
       appInfo?.isLoggedIn
       || Boolean(getCachedData<{ session: string }>(CacheKeys.login_session)?.session)
       || false
-    )
+    );
   }, [getCachedData, appInfo?.isLoggedIn])
 
   const handleClick = async() => {
     if (loggedIn) {
-      const allowedRoute = '/post-audio-book';
-      if (pathname !== allowedRoute) navigate(allowedRoute);
+      if (pathname !== PageRoutes.postAudio) navigate(PageRoutes.postAudio);
       else {
-        await appService.logout();
+        clearCache(CacheKeys.login_session);
+        appService.logout();
         setLoggedIn(false);
+        navigate(PageRoutes.home);
       }
     } else {
       setIsLoginModalOpen(true);
@@ -41,14 +42,19 @@ export default function Header({ appName, setIsLoginModalOpen }: HeaderProps) {
   }
 
   return (
-    <nav className="bg-white shadow-sm">
+    <nav className="sticky top-0 z-50 bg-white shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center">
+          <Link to={PageRoutes.home} className="flex items-center">
             <BookOpen className="text-sky-600 mr-2" size={24} />
             <span className="text-xl font-bold text-sky-900">{appName}</span>
           </Link>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-5">
+            {
+              loggedIn
+              ? <Link to={PageRoutes.dashboard} className='underline underline-offset-2 text-black self-end'>Dashboard</Link>
+              : null
+            }
             <button
               onClick={handleClick}
               className="flex items-center px-4 py-2 rounded-lg bg-sky-600 text-white hover:bg-sky-700 transition-colors"

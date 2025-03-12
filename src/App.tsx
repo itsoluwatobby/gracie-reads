@@ -12,6 +12,7 @@ import { useState } from 'react';
 import {
   BookPage,
   Dashboard,
+  HomePage,
   PageNotFound,
   PostAudioBook,
   UnauthorisedPage,
@@ -31,11 +32,12 @@ function App() {
 
       <Routes>
         <Route path='/' element={<AppLayout />}>
-          <Route index element={<Dashboard />} />
+          <Route index element={<HomePage />} />
           <Route path=':bookId' element={<BookPage />} />
 
-          <Route path='post-audio-book' element={<PostPageLayout />}>
-            <Route index element={<PostAudioBook />} />
+          <Route path='auth/' element={<PostPageLayout />}>
+            <Route path='post-audio-book' element={<PostAudioBook />} />
+            <Route path='dashboard' element={<Dashboard />} />
           </Route>
 
           <Route path='unauthorised' element={<UnauthorisedPage />} />
