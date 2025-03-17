@@ -6,7 +6,7 @@ import { appService } from "../app/appService";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../hooks";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import { CacheKeys } from "../utils";
+import { CacheKeys, PageRoutes } from "../utils";
 
 type LoginModalProp = {
   isOpen: boolean;
@@ -45,7 +45,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProp) {
         toast.success('Log in successful');
         cacheData(CacheKeys.login_session, { session: result.data.sessionId });
         setCredentials(initCredential);
-        navigate('/post-audio-book');
+        navigate(PageRoutes.postAudio);
         setAppInfo(result.data);
         onClose();
       }
