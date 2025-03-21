@@ -19,7 +19,7 @@ type ChapterUploaderProps = {
 let queried = false;
 export default function ChapterUploader({ cacheData, currentSession, setAudiobook }: ChapterUploaderProps) {
   // const dialogRef = useRef<HTMLDialogElement>();
-  const { isServerOnline } = useAppContext();
+  const { isServerOnline } = useAppContext() as AppContextProps
   // const { getCachedData } = useLocalStorage();
   const [file, setFile] = useState<File | null>(null);
   const [chapter, setChapter] = useState<Chapter>();

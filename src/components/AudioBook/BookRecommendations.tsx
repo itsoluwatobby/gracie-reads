@@ -13,7 +13,7 @@ type BookRecommendationsProps = {
 
 export default function BookRecommendations({ currentBookId }: BookRecommendationsProps) {
   const containerRef = useRef<HTMLDivElement>();
-  const { isServerOnline } = useAppContext();
+  const { isServerOnline } = useAppContext() as AppContextProps
   const [recommended, setRecommended] = useState<AudioSchema[]>([]);
   const [appState, setappState] = useState<AppState>(
     {

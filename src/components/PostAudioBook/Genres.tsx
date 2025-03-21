@@ -12,7 +12,7 @@ type GenresProps = {
   setAudioGenre: React.Dispatch<React.SetStateAction<string[]>>;
 }
 export default function Genres({ audioGenre, setAudioGenre }: GenresProps) {
-  const { appInfo, setAppInfo } = useAppContext();
+  const { appInfo, setAppInfo } = useAppContext() as AppContextProps
   const [newGenre, setNewGenre] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [addGenre, setAddGenre] = useState(false);

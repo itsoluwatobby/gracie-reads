@@ -19,7 +19,7 @@ export default function Chapters(
     setEpisode, setCurrentIndex, loading,
   }: ChaptersProps
 ) {
-  const { setMediaPlayer } = useAppContext()
+  const { setMediaPlayer } = useAppContext() as AppContextProps
 
   const scrollIntoView = useCallback((node: HTMLElement) => {
     if (node && node.id === episode?._id)

@@ -11,23 +11,29 @@ const initAudioState = {
   // length: 0,
 };
 
+const initValues = {
+  name: 'Lovely Audios',
+  email: '',
+  isLoggedIn: false,
+  appId: '',
+  channel: '',
+  genres: [],
+  createdAt: '',
+  updatedAt: '',
+  sessionId: '',
+};
+
 export const AppContextDataProvider = (
   { children }: { children: React.ReactNode },
 ) => {
   const [isServerOnline, setIsServerOnline] = useState(true);
-  const [appInfo, setAppInfo] = useState<Partial<AppConfig>>(
-    {
-      name: 'Lovely Audios',
-      email: '',
-      isLoggedIn: false,
-    },
-  );
-  const [theme, setTheme] = useState<Theme>(
-    window.matchMedia
-      && window.matchMedia(
-        '(prefers-color-scheme: dark)'
-      ).matches ? 'dark' : 'light'
-  );
+  const [appInfo, setAppInfo] = useState<Partial<AppConfig>>(initValues);
+  // const [theme, setTheme] = useState<Theme>(
+  //   window.matchMedia
+  //     && window.matchMedia(
+  //       '(prefers-color-scheme: dark)'
+  //     ).matches ? 'dark' : 'light'
+  // );
   const [toggleModal, setToggleModal] = useState(false);
   const [retries, setRetries] = useState(0);
   // const [currentUser, setCurrentUser] = useState('');
@@ -50,7 +56,7 @@ export const AppContextDataProvider = (
         // const user = await appService.getUser() as any;
         // setCurrentUser(user.data.ipAddress);
 
-        setAppInfo(appConfig.data);
+        setAppInfo(appConfig?.data || initValues);
         setRetries(0);
         setIsServerOnline(true);
       } catch (err: unknown) {
@@ -63,8 +69,9 @@ export const AppContextDataProvider = (
     })();
   }, [retries, isServerOnline])
 
+  // theme, setTheme,
   const value = {
-    theme, setTheme, deactivatePlayer,
+    deactivatePlayer,
     appInfo, toggleModal, setToggleModal,
     mediaPlayer, setMediaPlayer, isServerOnline,
     current, setCurrent, setAppInfo,

@@ -11,13 +11,13 @@ type CurrentModal = {
 type Theme = 'light' | 'dark'
 type AppContextProps = {
   appInfo: Partial<AppConfig>;
-  theme: Theme;
+  // theme: Theme;
   mediaPlayer: MediaPlayerProp;
   toggleModal: boolean;
   // currentUser: string;
   isServerOnline: boolean;
   current: CurrentModal;
-  setTheme: React.Dispatch<React.SetStateAction<Theme>>;
+  // setTheme: React.Dispatch<React.SetStateAction<Theme>>;
   setAppInfo: React.Dispatch<React.SetStateAction<Partial<AppConfig>>>;
   setCurrent: React.Dispatch<React.SetStateAction<CurrentModal>>;
   setToggleModal: React.Dispatch<React.SetStateAction<boolean>>;

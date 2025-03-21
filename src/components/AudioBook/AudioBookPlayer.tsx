@@ -10,7 +10,6 @@ import MediaPlayer from "./MediaPlayer";
 import MediaSpeed from "./MediaSpeed";
 import { useAppContext } from "../../hooks";
 import { appService } from "../../app/appService";
-// import { STREAM_URI } from "../../app/app.config";
 import toast from "react-hot-toast";
 import { initAppState } from "../../utils/initStates";
 
@@ -22,7 +21,7 @@ type AudioBookPlayerProps = {
 export default function AudioBookPlayer({ chapterId, loadingBook }: AudioBookPlayerProps) {
   const [episode, setEpisode] = useState<Episode | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { deactivatePlayer, setMediaPlayer } = useAppContext()
+  const { deactivatePlayer, setMediaPlayer } = useAppContext() as AppContextProps
   const [chapter, setChapter] = useState<Chapter>();
   const [episodeLength, setEpisodeLength] = useState<number>();
   const [appState, setAppState] = useState<AppState>(initAppState);

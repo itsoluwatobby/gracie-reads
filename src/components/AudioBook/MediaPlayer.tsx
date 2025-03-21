@@ -15,7 +15,7 @@ export default function MediaPlayer({ episode }: MediaPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [countUpTime, setCountUpTime] = useState('00:00');
   const [mediaLength, setMediaLength] = useState('00:00');
-  const { mediaPlayer, setMediaPlayer, deactivatePlayer } = useAppContext()
+  const { mediaPlayer, setMediaPlayer, deactivatePlayer } = useAppContext() as AppContextProps
   const { startPlayer, audioSource } = mediaPlayer;
 
   const handleTimeUpdate = () => {

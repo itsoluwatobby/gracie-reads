@@ -16,7 +16,7 @@ type LoginModalProp = {
 const initCredential = { email: '', password: '' };
 export default function LoginModal({ isOpen, onClose }: LoginModalProp) {
   const [credentials, setCredentials] = useState<CredentialProp>(initCredential);
-  const { setAppInfo } = useAppContext();
+  const { setAppInfo } = useAppContext() as AppContextProps
   const [revealPassword, setRevealPassword] = useState(false);
   const [setupLogin, setSetupLogin] = useState(false);
   const { cacheData } = useLocalStorage();

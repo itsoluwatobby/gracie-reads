@@ -13,7 +13,7 @@ type HeaderProps = {
 
 export default function Header({ appName, setIsLoginModalOpen }: HeaderProps) {
   const { pathname } = useLocation();
-  const { appInfo } = useAppContext();
+  const { appInfo } = useAppContext() as AppContextProps
   const { getCachedData, clearCache } = useLocalStorage();
   
   const navigate = useNavigate();
