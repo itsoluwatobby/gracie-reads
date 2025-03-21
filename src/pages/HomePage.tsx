@@ -10,7 +10,7 @@ import SearchResults from '../components/homepage/SearchResults';
 import PaginatedNav from '../components/homepage/PaginatedNav';
 import SearchBar from '../components/homepage/SearchBar';
 import { initAppState, PaginatedQuery, PaginatedQueryResponse } from '../utils/initStates';
-import { MetaTags } from '../layout/OGgraph';
+// import { MetaTags } from '../layout/OGgraph';
 
 export default function HomePage() {
   const { intersecting, observerRef } = useIntersectionObserver(
@@ -20,17 +20,17 @@ export default function HomePage() {
   const [searchedAudios, setSearchedAudios] = useState<AudioSchema[]>([]);
   const [retries, setRetries] = useState(0);
   const [retries1, setRetries1] = useState(0);
-  const { isServerOnline, current, appInfo } = useAppContext();
+  const { isServerOnline, current } = useAppContext();
   const [paginatedQuery, setPaginatedQuery] = useState<PaginatedQueryType>(PaginatedQuery);
   const [paginatedResponse, setPaginatedResponse] = useState<PaginatedQueryResponseType>(PaginatedQueryResponse);
   const [appState, setappState] = useState<AppState>(initAppState);
   const [appState1, setappState1] = useState<AppState>(initAppState);
   const [reload, setReload] = useState<number>(0)
   const [audios, setAudios] = useState<AudioTypes>({ recent: [], featured: [] });
-  const [host, setHost] = useState('');
+  // const [hostname, setHostname] = useState('');
 
   useEffect(() => {
-    setHost(window.location.href);
+    // setHostname(window?.location?.href || 'https://lovelyaudios.com');
     if (!isServerOnline) return;
     (async () => {
       if (audios?.featured?.length) return;
@@ -101,13 +101,13 @@ export default function HomePage() {
   return (
     <div className="bg-gradient-to-b from-sky-50 to-white">
       
-      <MetaTags 
+      {/* <MetaTags 
         appName={appInfo?.name || 'Lovely Audios'}
         title={appInfo?.name || 'Lovely Audios'}
         description="Your Journey Through Stories Begins Here"
-        url={host}
+        url={hostname}
         image='/files/lovely-audio.png'
-      />
+      /> */}
 
       <header 
       ref={observerRef}

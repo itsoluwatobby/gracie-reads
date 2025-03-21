@@ -12,8 +12,8 @@ import toast from "react-hot-toast";
 import { Button } from "../components/AudioBook";
 import { helper } from "../utils";
 import { initAppState } from "../utils/initStates";
-import { MetaTags } from "../layout/OGgraph";
-import { useAppContext } from "../hooks";
+// import { MetaTags } from "../layout/OGgraph";
+// import { useAppContext } from "../hooks";
 
 export default function BookPage() {
   const MaxAudioStoryLength = 680;
@@ -25,14 +25,14 @@ export default function BookPage() {
   const [viewMore, setViewMore] = useState<boolean>(false);
   const [canviewMore, setCanViewMore] = useState<boolean>(false);
   const [appState, setAppState] = useState<AppState>(initAppState);
-  const { appInfo } = useAppContext();
-  const [host, setHost] = useState('');
+  // const { appInfo } = useAppContext();
+  // const [hostname, setHostname] = useState('');
   const [appStateBook, setAppStateBook] = useState<AppState>(initAppState);
 
   const { loading } = appState!;
 
   useEffect(() => {
-    setHost(window.location.href);
+    // setHostname(window?.location?.href || 'https://lovelyaudios.com');
     if (!currentUser || !audioBook?.likes) return;
     setIsLiked(audioBook?.likes.includes(currentUser));
   }, [currentUser, audioBook?.likes])
@@ -92,13 +92,13 @@ export default function BookPage() {
       id={bookId}
       className='h-auto w-full flex flex-col bg-gradient-to-b from-sky-100 to-white text-black px-10 maxMobile:px-5 py-8 gap-12 mx-auto lg:w-[70%]'>
 
-      <MetaTags
+      {/* <MetaTags
         appName={appInfo?.name || 'Lovely Audios'}
         title={audioBook?.title || 'Lovely Audios'}
         description={helper.reduceTextLength((audioBook?.about ?? "Discover thousands of audiobooks narrated by world-class performers. Listen anywhere, anytime."), 50)}
-        url={host}
+        url={hostname}
         image='/files/bookpage.png'
-      />
+      /> */}
 
       {/* <PageHeader /> */}
       <div className="-mt-4 -mb-5 w-fit">
