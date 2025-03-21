@@ -16,31 +16,32 @@ import { initAppState } from "../../utils/initStates";
 
 type AudioBookPlayerProps = {
   chapterId: string;
+  loadingBook: boolean;
 }
 
-export default function AudioBookPlayer({ chapterId }: AudioBookPlayerProps) {
+export default function AudioBookPlayer({ chapterId, loadingBook }: AudioBookPlayerProps) {
   const [episode, setEpisode] = useState<Episode | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { deactivatePlayer, setMediaPlayer } = useAppContext()
   const [chapter, setChapter] = useState<Chapter>();
   const [episodeLength, setEpisodeLength] = useState<number>();
-  const [appStateBook, setAppStateBook] = useState<AppState>(initAppState);
+  const [appState, setAppState] = useState<AppState>(initAppState);
 
   useEffect(() => {
     if (!chapterId) return;
     (async () => {
       try {
-        setAppStateBook((prev) => ({ ...prev, loading: true }));
+        setAppState((prev) => ({ ...prev, loading: true }));
         const chapter = await appService.getAudioChapterById(chapterId);
         setChapter(chapter.data);
         setEpisodeLength(chapter.data.chapters.length);
       } catch (err: unknown) {
         const error = err as any;
         const message = error.response?.data?.error?.message || error?.message;
-        setAppStateBook((prev) => ({ ...prev, error: true, errMsg: message }));
+        setAppState((prev) => ({ ...prev, error: true, errMsg: message }));
         toast.error(message);
       } finally {
-        setAppStateBook((prev) => ({ ...prev, loading: false }));
+        setAppState((prev) => ({ ...prev, loading: false }));
       }
     })();
   }, [chapterId])
@@ -125,7 +126,7 @@ export default function AudioBookPlayer({ chapterId }: AudioBookPlayerProps) {
         episode={episode!}
         setEpisode={setEpisode}
         setCurrentIndex={setCurrentIndex}
-        loading={appStateBook.loading}
+        loading={loadingBook || appState.loading}
       />
 
     </div>

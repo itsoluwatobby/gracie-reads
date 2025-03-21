@@ -12,6 +12,8 @@ import toast from "react-hot-toast";
 import { Button } from "../components/AudioBook";
 import { helper } from "../utils";
 import { initAppState } from "../utils/initStates";
+import { MetaTags } from "../layout/OGgraph";
+import { useAppContext } from "../hooks";
 
 export default function BookPage() {
   const MaxAudioStoryLength = 680;
@@ -23,10 +25,14 @@ export default function BookPage() {
   const [viewMore, setViewMore] = useState<boolean>(false);
   const [canviewMore, setCanViewMore] = useState<boolean>(false);
   const [appState, setAppState] = useState<AppState>(initAppState);
-  
+  const { appInfo } = useAppContext();
+  const [host, setHost] = useState('');
+  const [appStateBook, setAppStateBook] = useState<AppState>(initAppState);
+
   const { loading } = appState!;
 
   useEffect(() => {
+    setHost(window.location.href);
     if (!currentUser || !audioBook?.likes) return;
     setIsLiked(audioBook?.likes.includes(currentUser));
   }, [currentUser, audioBook?.likes])
@@ -36,6 +42,7 @@ export default function BookPage() {
 
     (async () => {
       try {
+        setAppStateBook((prev) => ({ ...prev, loading: true }));
         const audioData = await appService.getAudio(bookId);
         const user = await appService.getUser();
 
@@ -45,7 +52,10 @@ export default function BookPage() {
       } catch (err: unknown) {
         const error = err as any;
         const message = error.response?.data?.error?.message || error?.message;
+        setAppStateBook((prev) => ({ ...prev, error: true, errMsg: message }));
         toast.error(message);
+      } finally {
+        setAppStateBook((prev) => ({ ...prev, loading: false }));
       }
     })();
   }, [bookId])
@@ -82,6 +92,14 @@ export default function BookPage() {
       id={bookId}
       className='h-auto w-full flex flex-col bg-gradient-to-b from-sky-100 to-white text-black px-10 maxMobile:px-5 py-8 gap-12 mx-auto lg:w-[70%]'>
 
+      <MetaTags
+        appName={appInfo?.name || 'Lovely Audios'}
+        title={audioBook?.title || 'Lovely Audios'}
+        description={helper.reduceTextLength((audioBook?.about ?? "Discover thousands of audiobooks narrated by world-class performers. Listen anywhere, anytime."), 50)}
+        url={host}
+        image='/files/bookpage.png'
+      />
+
       {/* <PageHeader /> */}
       <div className="-mt-4 -mb-5 w-fit">
         <Button Name={'<'} handleClick={() => navigate('/')} />
@@ -91,12 +109,12 @@ export default function BookPage() {
         <h1 className="capitalize md:text-start text-center border-t-2 pt-2 text-3xl font-semibold">{audioBook?.title}</h1>
 
         <article
-          className='flex items-center bg-white rounded-md gap-6 md:w-[30rem] text-sm transition-transform p-2 shadow-md'>
-          <figure className='flex-none bg-gray-200 rounded-md w-40 h-44 mobile:h-36 mobile:w-28'>
+          className='flex items-center bg-white rounded-md gap-6 md:w-[36rem] text-sm transition-transform p-2 shadow-md'>
+          <figure className={`flex-none bg-gray-200 rounded-md w-56 h-44 mobile:h-36 mobile:w-36 ${appStateBook.loading ? 'animate-pulse' : 'animate-none'}`}>
             {
               audioBook?.thumbnail ?
                 <img src={audioBook.thumbnail} alt={audioBook.title}
-                  className='w-full rounded-md h-full object-cover'
+                  className='size-full wfull rounded-md hfull object-cover'
                 />
                 : null
             }
@@ -105,12 +123,12 @@ export default function BookPage() {
           <section className="flex flex-col justify-between h-full w-full">
             <div className="mt-12 flex flex-col gap-2">
               <p className='capitalize font-medium flex-wrap'>By: <span className="">{audioBook?.author}</span></p>
-              <div className='flex items-center gap-1 overflow-hidden flex-wrap text-[13px]'>
+              <div className='overflow-hidden flex flex-col text-[13px]'>
                 <span>Categories:</span>
-                <div className='pl-1 flex items-center flex-wrap gap-1'>
+                <div className='pl-1 flex items-center flex-wrap gap-1 capitalize font-medium text-xs'>
                   {
-                    audioBook?.genre?.map((genre, i) => (
-                      <span key={i} className='capitalize font-medium bg-sky-100 rounded-sm p-0.5 px-1.5'>{genre}</span>
+                    audioBook?.genre?.sort()?.map((genre, i) => (
+                      <span key={i} className='bg-sky-100 rounded-sm p-0.5 px-1.5'>{genre}</span>
                     ))
                   }
                 </div>
@@ -129,7 +147,7 @@ export default function BookPage() {
                     <AiFillHeart
                       onClick={toggleLike}
                       className={`hover:scale-[1.04] active:scale-[1] transition-all cursor-pointer text-sky-500 ${loading ? 'animate-pulse' : ''}`}
-                      />
+                    />
                     :
                     <AiOutlineHeart
                       onClick={toggleLike}
@@ -145,20 +163,22 @@ export default function BookPage() {
 
         <div className={`flex flex-col capitalize text-base`}>
           <h5 className="font-semibold">About:</h5>
-          <p 
-          onClick={() => setViewMore((prev) => !prev)}
-          className={`first-letter:capitalize p-2 text-[12px] indent-3 text-justify ${viewMore ? 'h-64 overflow-y-scroll' : ''}`}>{viewMore ? audioBook?.about : helper.reduceTextLength(audioBook?.about ?? '', MaxAudioStoryLength)}</p>
+          <p
+            onClick={() => setViewMore((prev) => !prev)}
+            className={`first-letter:capitalize p-2 text-[12px] indent-3 text-justify ${viewMore ? 'h-64 overflow-y-scroll' : ''}`}>{viewMore ? audioBook?.about : helper.reduceTextLength(audioBook?.about ?? '', MaxAudioStoryLength)}</p>
         </div>
 
         {
           canviewMore ?
-          <span className="underline underline-offset-2 self-center -mt-4 cursor-pointer text-blue-500 text-xs"
-          onClick={() => setViewMore((prev) => !prev)}
-          >{viewMore ? 'view less' : 'view more'}</span> : null
+            <span className="underline underline-offset-2 self-center -mt-4 cursor-pointer text-blue-500 text-xs"
+              onClick={() => setViewMore((prev) => !prev)}
+            >{viewMore ? 'view less' : 'view more'}</span> : null
         }
       </div>
 
-      <AudioBookPlayer chapterId={audioBook?.chapterId as string} />
+      <AudioBookPlayer chapterId={audioBook?.chapterId as string}
+        loadingBook={appStateBook.loading}
+      />
 
       <BookRecommendations currentBookId={bookId!} />
 

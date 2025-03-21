@@ -27,7 +27,7 @@ function App() {
   return (
     <main className={`customScrollBar page-fade-in max-w-[1440px] mx-auto ${theme === 'light' ? 'bg-gradient-to-b from-sky-50 to-white' : `bg-gradient-to-b from-sky-50 to-white text-white`} w-full h-screen flex flex-col justify-between transition-colors overflow-y-scroll`}>
 
-      <Header appName={appInfo.name!} setIsLoginModalOpen={setIsLoginModalOpen} />
+      <Header appName={appInfo?.name || 'Lovely Audios'} setIsLoginModalOpen={setIsLoginModalOpen} />
       <Modal toggle={toggle} setToggle={setToggle} />
 
       <Routes>

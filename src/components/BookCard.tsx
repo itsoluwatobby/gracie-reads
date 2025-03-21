@@ -47,9 +47,9 @@ export function AudiobookCard(
     } catch (err: unknown) {
       const error = err as any;
       const message = error.response?.data?.error?.message || error?.message;
-      console.log(message);
-      return;
-      // toast.error(message);
+      // console.log(message);
+      toast.error(message);
+      // return;
     } finally {
       setLoading(false)
     }
@@ -81,11 +81,13 @@ export function AudiobookCard(
           <h3 className="font-bold text-gray-800 text-base">{helper.reduceTextLength(title)}</h3>
           <p className="text-gray-600 text-sm">{helper.reduceTextLength(author)}</p>
           <div className="flex items-center justify-between mt-2">
-            <span className="flex items-center text-gray-500">
+            <div className="flex items-center text-gray-500">
               <Headphones size={16} className="mr-1" />
-              {/* {book.duration} */}
-              {episodeLength} {episodeLength > 1 ? 'chapters' : 'chapter'}
-            </span>
+              <span className='hidden'>
+                {/* {book.duration} */}
+                {episodeLength} {episodeLength > 1 ? 'chapters' : 'chapter'}
+              </span>
+            </div>
             {/* {featured && (
               <span className="flex items-center text-yellow-500">
                 <Star size={16} className="mr-1" fill="currentColor" />

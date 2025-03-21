@@ -2,13 +2,14 @@ import { useEffect } from 'react';
 import { Helmet } from 'react-helmet'
 
 type MetaProps = {
+  appName: string;
   title: string;
   description: string;
   url: string;
   image: string;
 }
-export const MetaTags = ({ title, description, url, image }: MetaProps) => {
-
+export const MetaTags = ({ appName, title, description, url, image }: MetaProps) => {
+  
   useEffect(() => {
     let isMounted = true
     if (isMounted) document.title = title
@@ -29,7 +30,7 @@ export const MetaTags = ({ title, description, url, image }: MetaProps) => {
       <meta property="og:url" content={url} />
       <meta property="og:image" content={image} />
       <meta property="og:type" content="website" />
-      <meta property="og:site_name" content="wallet first"></meta>
+      <meta property="og:site_name" content={appName}></meta>
 
       {/* TWITTER CARD */}
       <meta name="twitter:card" content="summary_large_image" />

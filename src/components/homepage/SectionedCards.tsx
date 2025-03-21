@@ -51,14 +51,18 @@ export default function SectionedCards({ sectionTitle, audios, appState, setRelo
               ))
             }
           </div>
-        ) : (
+        ) 
+        : 
+        (
           appState?.error
           ? (
             <div className='text-red-500 text-lg flex justify-center items-center gap-2'>
             {appState?.errMsg}
             <MdErrorOutline className='text-2xl' />
             </div>
-          ) : (
+          ) 
+        
+        : (
             isAvailable ?
               <div className="grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-4">
                 {

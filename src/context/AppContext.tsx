@@ -18,7 +18,7 @@ export const AppContextDataProvider = (
   const [appInfo, setAppInfo] = useState<Partial<AppConfig>>(
     {
       name: 'Lovely Audios',
-      email: 'crazywandyte@gmail.com',
+      email: '',
       isLoggedIn: false,
     },
   );
