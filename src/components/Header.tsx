@@ -52,7 +52,7 @@ export default function Header({ appName, setIsLoginModalOpen }: HeaderProps) {
           <div className="flex items-center space-x-5">
             {
               loggedIn
-              ? <Link to={PageRoutes.dashboard} className='underline underline-offset-2 text-black self-end'>Dashboard</Link>
+              ? <Link to={PageRoutes.dashboard} className={`underline underline-offset-2 text-black self-end ${pathname === PageRoutes.dashboard ? 'hidden' : ''}`}>Dashboard</Link>
               : null
             }
             <button

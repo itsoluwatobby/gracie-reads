@@ -23,7 +23,7 @@ export default function Footer() {
             <BookOpen className="mr-2" size={24} />
             <span className="text-xl font-bold">Lovely Audios</span>
           </div>
-          <p className="maxMobile:self-end text-sky-200">&copy;{new Date().getFullYear()}. Lovely Audios. All rights reserved.</p>
+          <p className="maxMobile:self-end text-sky-100">&copy;{new Date().getFullYear()}. Lovely Audios. All rights reserved.</p>
         </div>
       </div>
     </footer>

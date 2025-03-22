@@ -116,6 +116,7 @@ interface AudioSchema {
   title: string;
   isPublic: boolean;
   rating?: Rating[];
+  comments?: string[];
   downloads?: number;
   note?: string;
   likes?: string[];

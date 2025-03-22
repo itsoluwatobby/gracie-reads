@@ -15,11 +15,12 @@ type BookCardProps = {
   bookId: string;
   chapterId: string;
   setReload?: React.Dispatch<React.SetStateAction<number>>;
+  classNames?: string;
 }
 
 export function AudiobookCard(
   {
-    thumbnail, title, author,
+    thumbnail, title, author, classNames='',
     bookId, chapterId, setReload,
   }: BookCardProps
 ) {
@@ -72,11 +73,11 @@ export function AudiobookCard(
   }, [chapterId])
 
   return (
-    <div className='relative'>
+    <div className={`relative ${classNames}`}>
       <Link
         to={`/${bookId}`}
         className="bg-white rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-[1.02]">
-        <img src={thumbnail} alt={title} className="w-full h-40 object-cover" />
+        <img src={thumbnail} alt={title} className="rounded-md w-full h-40 object-cover" />
         <div className="p-3">
           <h3 className="font-bold text-gray-800 text-base">{helper.reduceTextLength(title)}</h3>
           <p className="text-gray-600 text-sm">{helper.reduceTextLength(author)}</p>

@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeEvent, useState, useEffect } from "react";
 import { Genres, Input, PageHeader } from "../components";
-import { InitAudioBookState } from "../utils/initStates";
+import { initAppState, InitAudioBookState } from "../utils/initStates";
 import { nanoid } from "nanoid";
 import { AiOutlinePicture } from "react-icons/ai";
 import { Colors } from "../utils/colors";
 import { CacheKeys } from "../utils/constants";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { appService } from "../app/appService";
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import ChapterUploader from "../components/PostAudioBook/ChapterUploader";
@@ -20,9 +20,30 @@ export default function PostAudioBook() {
   const [audioGenre, setAudioGenre] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const { bookId } = useParams();
+  const [appStateBook, setAppStateBook] = useState<AppState>(initAppState);
 
   // create session whenever page is visited
   const { author, title, about } = audiobook;
+
+  useEffect(() => {
+    if (!bookId) return;
+
+    (async () => {
+      try {
+        setAppStateBook((prev) => ({ ...prev, loading: true }));
+        const audioData = await appService.getAudio(bookId);
+        setAudiobook(audioData.data);
+      } catch (err: unknown) {
+        const error = err as any;
+        const message = error.response?.data?.error?.message || error?.message;
+        setAppStateBook((prev) => ({ ...prev, error: true, errMsg: message }));
+        toast.error(message);
+      } finally {
+        setAppStateBook((prev) => ({ ...prev, loading: false }));
+      }
+    })();
+  }, [bookId])
 
   useEffect(() => {
     if (!currentSession?.sessionId) {
@@ -30,7 +51,7 @@ export default function PostAudioBook() {
       const data = {
         sessionId,
         timestamp: new Date().toUTCString(),
-        data: {} as AudioSchema,
+        data: bookId ? audiobook : {} as AudioSchema,
       };
       cacheData(CacheKeys.session, data);
       setCurrentSession(data);
@@ -74,13 +95,23 @@ export default function PostAudioBook() {
   const submitForm = async () => {
     if (isLoading || !canSubmit) return;
 
-    const body = {
-      chapterId: audiobook.chapterId,
-      thumbnail: '', title, about: about ?? '',
-      author, genre: audioGenre,
-      // note: audiobook?.note,
-      // reference: audiobook?.reference,
-    };
+    let body;
+    if (!bookId) {
+      body = {
+        chapterId: audiobook.chapterId,
+        thumbnail: '', title, about: about ?? '',
+        author, genre: audioGenre,
+        // note: audiobook?.note,
+        // reference: audiobook?.reference,
+      };
+    } else {
+      body = {
+        ...audiobook,
+        about: about ?? '',
+        title, author,
+        genre: audioGenre,
+      };
+    }
 
     try {
       const formData = new FormData();
@@ -128,7 +159,7 @@ export default function PostAudioBook() {
           className='bg-blue-200 grid place-content-center text-3xl rounded-md w-32 h-32 border border-blue-600'>
           {
             file ?
-              <img src={URL.createObjectURL(file)} alt="thumbnail" loading="eager"
+              <img src={bookId ? audiobook?.thumbnail : URL.createObjectURL(file)} alt="thumbnail" loading="eager"
                 className='w-32 rounded-md h-32 object-cover'
               />
               : <AiOutlinePicture />

@@ -21,7 +21,7 @@ export default function PostPageLayout() {
   return (
     <>
       {
-        !loggedIn ? <Navigate to={PageRoutes.unauthorised} /> : <Outlet />
+        loggedIn ? <Navigate to={PageRoutes.unauthorised} /> : <Outlet />
       }
     </>
   )

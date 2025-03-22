@@ -48,7 +48,7 @@ export default function Chapters(
               setMediaPlayer((prev) => ({ ...prev, audioSource: chapter.link }));
               // setMediaPlayer((prev) => ({ ...prev, audioSource: `${STREAM_URI}/${chapter.link}` }));
             }}
-            className={`flex items-center justify-between text-sm ${chapter._id === episode?._id ? 'bg-sky-100' : 'hover:bg-sky-200'} cursor-pointer rounded px-1.5 py-3 last:border-b-0 border-b border-b-gray-400`}
+            className={`flex items-center justify-between text-sm ${chapter._id === episode?._id ? 'bg-sky-100' : 'hover:bg-sky-200'} cursor-pointer rounded-sm px-1.5 py-3 last:border-b-0 border-b border-b-gray-300`}
             >
               <p className="flex items-center gap-6">
                 <span className="self-start">{padNumber((index + 1).toString())}.</span>

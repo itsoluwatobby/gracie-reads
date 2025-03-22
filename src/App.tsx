@@ -37,6 +37,7 @@ function App() {
 
           <Route path='auth/' element={<PostPageLayout />}>
             <Route path='post-audio-book' element={<PostAudioBook />} />
+            <Route path='edit/:bookId' element={<PostAudioBook />} />
             <Route path='dashboard' element={<Dashboard />} />
           </Route>
 
