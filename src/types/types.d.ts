@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /// <reference types="types.d.ts" />
 
 type ScrollDirection = 'left' | 'right'
@@ -178,4 +179,22 @@ type PaginatedQueryType = {
 type AudioTypes = {
   recent: AudioSchema[];
   featured: AudioSchema[];
+}
+
+type AnalyticsProps = {
+  month: string;
+  comments: number;
+  likes: number;
+  views: number;
+  _id: { month: number, year: number }
+};
+
+type AppDashboardProps =  {
+  cardDetails: {
+    audios: number;
+    views: number;
+    likes: number;
+    comments: number;
+  };
+  analytics: AnalyticsProps[]
 }

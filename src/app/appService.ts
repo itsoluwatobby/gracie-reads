@@ -1,7 +1,7 @@
 import { AxiosProgressEvent, AxiosRequestConfig } from "axios";
 import { appRequest } from "./app.config";
 import axios from 'axios'
-import { AppConfigPaths, ChapterPaths, Paths } from "./path.resource";
+import { AdminPaths, AppConfigPaths, ChapterPaths, Paths } from "./path.resource";
 import { PaginatedQuery } from "../utils/initStates";
 
 type ChapterUpload = {
@@ -67,7 +67,7 @@ class AppService {
   
   async rateAudiobook(body: { audioId: string, rating: number }) {
     const result = await appRequest<unknown, ResponseData<AudioSchema>>(
-      `${Paths.rateAudio.endpoint}`,
+      Paths.rateAudio.endpoint,
       body,
       Paths.rateAudio.method,
     );
@@ -77,7 +77,7 @@ class AppService {
   
   async getUser() {
     const result = await appRequest<unknown, ResponseData<{ ipAddress: string }>>(
-      `${Paths.getUser.endpoint}`,
+      Paths.getUser.endpoint,
       {},
       Paths.getUser.method,
     );
@@ -107,7 +107,7 @@ class AppService {
 
   async removeEpisode(sessionId: string, episodeId: string) {
     const result = await appRequest<unknown, ResponseData<Chapter>>(
-      `${ChapterPaths.removeChapter.endpoint}`,
+      ChapterPaths.removeChapter.endpoint,
       { sessionId, episodeId },
       ChapterPaths.removeChapter.method,
     );
@@ -135,21 +135,21 @@ class AppService {
     return result.data;
   }
   
-  async fetchRecommendedAudios() {
+  async fetchRecentAudiobooks() {
     const result = await appRequest<unknown, ResponseData<AudioSchema[]>>(
-      Paths.getAudioRecommendations.endpoint,
+      Paths.getRecentAudiobooks.endpoint,
       {},
-      Paths.getAudioRecommendations.method,
+      Paths.getRecentAudiobooks.method,
     );
 
     return result.data;
   }
   
-  async deleteAudio(audioId: string) {
-    const result = await appRequest<unknown, ResponseData<AudioSchema>>(
-      `${Paths.delete.endpoint}/${audioId}`,
+  async fetchRecommendedAudios() {
+    const result = await appRequest<unknown, ResponseData<AudioSchema[]>>(
+      Paths.getAudioRecommendations.endpoint,
       {},
-      Paths.delete.method,
+      Paths.getAudioRecommendations.method,
     );
 
     return result.data;
@@ -260,9 +260,40 @@ class AppService {
 
   async logout() {
     const result = await appRequest<unknown, ResponseData<AudioSchema>>(
-      `${AppConfigPaths.logout.endpoint}`,
+      AppConfigPaths.logout.endpoint,
       {},
       AppConfigPaths.logout.method,
+    );
+
+    return result.data;
+  }
+
+  // ADMIN ROUTES
+  async deleteAudio(audioId: string) {
+    const result = await appRequest<unknown, ResponseData<{ id: string }>>(
+      `${AdminPaths.delete.endpoint}/${audioId}`,
+      {},
+      AdminPaths.delete.method,
+    );
+
+    return result.data;
+  }
+
+  async getAppDashboard() {
+    const result = await appRequest<unknown, ResponseData<AppDashboardProps>>(
+      AdminPaths.getAppDashboard.endpoint,
+      {},
+      AdminPaths.getAppDashboard.method,
+    );
+
+    return result.data;
+  }
+
+  async toggleBookStatus(audioId: string) {
+    const result = await appRequest<unknown, ResponseData<AudioSchema>>(
+      `${AdminPaths.toggleBookStatus.endpoint}/${audioId}`,
+      {},
+      AdminPaths.toggleBookStatus.method,
     );
 
     return result.data;

@@ -46,12 +46,12 @@ export default function BookTable() {
     })()
   }, [isServerOnline, reload, audioBooks, paginatedQuery])
 
-  const TableHeading = ['Title', 'Views', 'Likes', 'Rating', 'Comments', 'Status', 'Actions'];
+  const TableHeading = ['Title', 'Views', 'Likes', 'Rating', 'Comments', 'Status', 'Date', 'Actions'];
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden +">
 
-      <h2 className="text-xl font-bold text-gray-800 p-6">Your Audiobooks</h2>
+      <h2 className="text-xl font-semibold text-gray-800 p-6">Your Audiobooks</h2>
       
       <div className="overflow-x-auto">
         <table className="w-full">
@@ -70,10 +70,12 @@ export default function BookTable() {
             : (
                 appState.error ? (
                   <tbody className='h-14 relative'>
-                    <td className='absolute p-5 left-[31%] right-[31%] flex items-center gap-2 bottom-0 text-red-500'>
-                      {appState?.errMsg}
-                      <MdErrorOutline className='text-3xl' />
-                    </td>
+                    <tr>
+                      <td className='absolute p-5 left-[31%] right-[31%] flex items-center gap-2 bottom-0 text-red-500'>
+                        {appState?.errMsg}
+                        <MdErrorOutline className='text-3xl' />
+                      </td>
+                    </tr>
                   </tbody>
               )
               : 
@@ -85,9 +87,11 @@ export default function BookTable() {
                   />
                 ) : (
                   <tbody className='h-14 relative'>
-                    <td className='absolute p-5 left-[31%] right-[31%] bottom-0 text-black'>
-                      No Audiobooks to display
-                    </td>
+                    <tr>
+                      <td className='absolute p-5 left-[31%] right-[31%] bottom-0 text-black'>
+                        No Audiobooks to display
+                      </td>
+                    </tr>
                   </tbody>
                 )
               )

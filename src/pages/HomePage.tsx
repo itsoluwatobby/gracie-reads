@@ -69,8 +69,8 @@ export default function HomePage() {
       setappState1(prev => ({ ...prev, loading: true }));
       if (retries1 >= 3) return;
       try {
-        const recendtAudiosData = await appService.fetchRecommendedAudios();
-        const sortedRecentAudios = recendtAudiosData?.data?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+        const recentAudiosData = await appService.fetchRecentAudiobooks();
+        const sortedRecentAudios = recentAudiosData?.data?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
         setAudios((prev) => ({ ...prev, recent: sortedRecentAudios }));
         setRetries1(0);
@@ -182,7 +182,7 @@ export default function HomePage() {
           :
           <ContactIcon
             onClick={() => setContactUs(true)}
-            className='size-11 cursor-pointer p-2.5 absolute bottom-6 z-10 right-2 bg-sky-600 active:bg-sky-500 rounded-full'
+            className='hidden size-11 cursor-pointer p-2.5 fixed bottom-8 z-10 left-4 bg-sky-600 active:bg-sky-500 rounded-full'
           />
       }
 

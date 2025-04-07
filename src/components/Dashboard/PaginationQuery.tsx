@@ -66,7 +66,7 @@ const Button = ({ name, disabled, canShow, handleClick }: ButtonProps) => {
   return (
     <button
       disabled={disabled}
-      className={`focus:outline-none ring-0 w-12 p-0.5 mt-4 grid place-content-center rounded-md bg-sky-500 disabled:bg-black text-white hover:bg-sky-600 transition-all text-xl active:scale-95 ${!canShow ? 'block' : 'hidden'}`}
+      className={`focus:outline-none ring-0 w-12 p-0.5 mt-4 grid place-content-center rounded-md bg-sky-500 disabled:bg-black text-white hover:bg-sky-600 transition-all text-xl active:scale-95 ${canShow ? 'block' : 'hidden'}`}
       onClick={handleClick}
     >
       {name}

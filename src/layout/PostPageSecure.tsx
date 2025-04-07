@@ -8,7 +8,11 @@ import { appService } from "../app/appService";
 export default function PostPageLayout() {
   const { appInfo } = useAppContext() as AppContextProps
   const { clearCache, getCachedData } = useLocalStorage();
-  const [loggedIn, setLoggedIn] = useState(appInfo?.isLoggedIn || Boolean(getCachedData<{ session: string }>(CacheKeys.login_session)?.session) || false);
+  const [loggedIn, setLoggedIn] = useState(
+    appInfo?.isLoggedIn 
+    || Boolean(getCachedData<{ session: string }>(CacheKeys.login_session)?.session) 
+    || false
+  );
 
   useEffect(() => {
     if (!loggedIn) {
@@ -21,7 +25,7 @@ export default function PostPageLayout() {
   return (
     <>
       {
-        loggedIn ? <Navigate to={PageRoutes.unauthorised} /> : <Outlet />
+        !loggedIn ? <Navigate to={PageRoutes.unauthorised} /> : <Outlet />
       }
     </>
   )

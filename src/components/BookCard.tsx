@@ -13,7 +13,7 @@ type BookCardProps = {
   title: string;
   author: string;
   bookId: string;
-  chapterId: string;
+  chapterId?: string;
   setReload?: React.Dispatch<React.SetStateAction<number>>;
   classNames?: string;
 }
@@ -21,11 +21,11 @@ type BookCardProps = {
 export function AudiobookCard(
   {
     thumbnail, title, author, classNames='',
-    bookId, chapterId, setReload,
+    bookId, setReload,
   }: BookCardProps
 ) {
   const { getCachedData } = useLocalStorage();
-  const [episodeLength, setEpisodeLength] = useState(0);
+  // const [episodeLength, setEpisodeLength] = useState(0);
   const [loggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -56,21 +56,21 @@ export function AudiobookCard(
     }
   };
 
-  useEffect(() => {
-    if (!chapterId) return;
-    (async () => {
-      try {
-        const chapter = await appService.getAudioChapterById(chapterId);
-        setEpisodeLength(chapter.data.chapters.length);
-      } catch (err: unknown) {
-        const error = err as any;
-        const message = error.response?.data?.error?.message || error?.message;
-        console.log(message);
-        return;
-        // toast.error(message);
-      }
-    })();
-  }, [chapterId])
+  // useEffect(() => {
+  //   if (!chapterId) return;
+  //   (async () => {
+  //     try {
+  //       const chapter = await appService.getAudioChapterById(chapterId);
+  //       setEpisodeLength(chapter.data.chapters.length);
+  //     } catch (err: unknown) {
+  //       const error = err as any;
+  //       const message = error.response?.data?.error?.message || error?.message;
+  //       console.log(message);
+  //       return;
+  //       // toast.error(message);
+  //     }
+  //   })();
+  // }, [chapterId])
 
   return (
     <div className={`relative ${classNames}`}>
@@ -84,10 +84,10 @@ export function AudiobookCard(
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center text-gray-500">
               <Headphones size={16} className="mr-1" />
-              <span className='hidden'>
+              {/* <span className='hidden'> */}
                 {/* {book.duration} */}
-                {episodeLength} {episodeLength > 1 ? 'chapters' : 'chapter'}
-              </span>
+                {/* {episodeLength} {episodeLength > 1 ? 'chapters' : 'chapter'} */}
+              {/* </span> */}
             </div>
             {/* {featured && (
               <span className="flex items-center text-yellow-500">

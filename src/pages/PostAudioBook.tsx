@@ -26,7 +26,10 @@ export default function PostAudioBook() {
   // create session whenever page is visited
   const { author, title, about } = audiobook;
 
+  const { loading } = appStateBook;
+
   useEffect(() => {
+    // update audio book
     if (!bookId) return;
 
     (async () => {

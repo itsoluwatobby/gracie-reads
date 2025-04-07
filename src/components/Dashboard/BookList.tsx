@@ -6,6 +6,7 @@ import { initAppState } from '../../utils/initStates';
 import { appService } from '../../app/appService';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { format } from 'timeago.js'
 
 type BookListProps = {
   audioBooks: AudioSchema[];
@@ -34,10 +35,10 @@ export default function BookList({ audioBooks, setReload }: BookListProps) {
       setAppStateDelete((prev) => ({ ...prev, loading: false }));
     }
   };
-  
+
   const handleBookStatus = async (bookId: string) => {
     if (appStateStatus.loading) return;
-  
+
     try {
       // console.log(status)
       setAppStateStatus((prev) => ({ ...prev, loading: true }));
@@ -54,30 +55,36 @@ export default function BookList({ audioBooks, setReload }: BookListProps) {
     }
   };
 
-  const listClassNames = "px-3 py-3 whitespace-nowrap text-gray-600 text-center";
+  const listClassNames = "px-2 pt-3 pb-1 whitespace-nowrap text-gray-600 text-center";
+
+  // audioBooks.sort((a,b) => b.createdAt.localeCompare(a.createdAt));
 
   return (
     <tbody className="divide-y divide-gray-200 text-sm">
       {audioBooks.map((book) => (
         <tr key={book._id}
-        className={`${book.isPublic ? '' : 'opacity-75'} cursor-pointer hover:scale-[1.005] transition-transform`}
+          className={`${book.isPublic ? '' : 'opacity-75'} cursor-pointer hover:scale-[1.0001] transition-transform`}
         >
-          <td 
-          title={book.title}
-          onClick={() => navigate(`/${book._id!}`)}
-          className="px-3 py-3 whitespace-nowrap text-gray-800">{helper.reduceTextLength(book.title, 20)}</td>
+          <td
+            title={book.title}
+            onClick={() => navigate(`/${book._id!}`)}
+            className="p-3 pb-1 whitespace-nowrap text-gray-800">{helper.reduceTextLength(book.title, 20)}</td>
           <td className={listClassNames}>{helper.checkCount(book.views)}</td>
           <td className={listClassNames}>{helper.checkCount(book.likes)}</td>
           <td className={listClassNames}>{helper.getRating(book.rating!)}</td>
           <td className={listClassNames}>{helper.checkCount(book?.comments || [])}</td>
-          <td 
-          title={book.isPublic ? 'Make Private' : 'Make Public'}
-          onClick={() => handleBookStatus(book._id!)}
-          className="px-1 text-[12px] py-3 whitespace-nowrap text-gray-600">
+
+          <td
+            title={book.isPublic ? 'Make Private' : 'Make Public'}
+            onClick={() => handleBookStatus(book._id!)}
+            className="px-1 text-[12px] py-3 whitespace-nowrap text-gray-600">
             <span className={`p-0.5 rounded-lg px-2 ${book.isPublic ? 'bg-green-200' : 'bg-red-200'} cursor-pointer`}>
               {book.isPublic ? 'public' : 'private'}
             </span>
           </td>
+
+          <td className={`${listClassNames} text-xs`}>{format(book.createdAt)}</td>
+
           <td className="px-3 grid place-content-center py-3 whitespace-nowrap">
             <div className="flex space-x-3">
               <button

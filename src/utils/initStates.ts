@@ -50,3 +50,15 @@ export const PaginatedQueryResponse = {
   prevPage: 0,
   nextPage: 0
 };
+
+export const InitStateAppDashboard =  {
+  cardDetails: {
+    audios: 0,
+    views: 0,
+    likes: 0,
+    comments: 0,
+  },
+  analytics: [],
+};
+
+export const Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
