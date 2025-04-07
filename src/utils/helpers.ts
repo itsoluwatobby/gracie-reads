@@ -69,8 +69,9 @@ class Helper {
     }
   }
 
-  getToken() {
-    return window.localStorage.getItem('blaze_estate') as string;
+  getRating(rating: Rating[]) {
+    const MaxRating = 5;
+    return (rating.length / MaxRating).toFixed(1);
   }
 }
 export const helper = new Helper();

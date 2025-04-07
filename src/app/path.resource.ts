@@ -19,13 +19,13 @@ export const Paths = {
     endpoint: `${AudioBasePath}/`,
     method: HTTPMethods.GET,
   },
+  getRecentAudiobooks: {
+    endpoint: `${AudioBasePath}/recents`,
+    method: HTTPMethods.GET,
+  },
   getAudioRecommendations: {
     endpoint: `${AudioBasePath}/recommendations`,
     method: HTTPMethods.GET,
-  },
-  delete: {
-    endpoint: `${AudioBasePath}/delete`,
-    method: HTTPMethods.DELETE,
   },
   likeAudio: {
     endpoint: `${AudioBasePath}/like`,
@@ -54,6 +54,22 @@ export const ChapterPaths = {
   removeChapter: {
     endpoint: `${ChapterBasePath}/remove`,
     method: HTTPMethods.POST,
+  },
+};
+
+const AdminBasePath = 'api/v1/admin';
+export const AdminPaths = {
+  getAppDashboard: {
+    endpoint: `${AdminBasePath}`,
+    method: HTTPMethods.GET,
+  },
+  toggleBookStatus: {
+    endpoint: `${AdminBasePath}/make-private`,
+    method: HTTPMethods.PATCH,
+  },
+   delete: {
+    endpoint: `${AdminBasePath}/delete`,
+    method: HTTPMethods.DELETE,
   },
 };
 

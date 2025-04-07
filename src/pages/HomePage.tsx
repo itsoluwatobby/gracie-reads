@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
-import { Headphones, ArrowBigUp } from 'lucide-react';
+import { Headphones, ArrowBigUp, ContactIcon } from 'lucide-react';
 import SectionedCards from '../components/homepage/SectionedCards';
 import { useAppContext, useIntersectionObserver } from '../hooks';
 import { appService } from '../app/appService';
@@ -9,8 +9,10 @@ import toast from 'react-hot-toast';
 import SearchResults from '../components/homepage/SearchResults';
 import PaginatedNav from '../components/homepage/PaginatedNav';
 import SearchBar from '../components/homepage/SearchBar';
+import ContactForm from '../components/homepage/ContactForm';
 import { initAppState, PaginatedQuery, PaginatedQueryResponse } from '../utils/initStates';
 import { MetaTags } from '../layout/OGgraph';
+import { MdCancel } from 'react-icons/md';
 
 export default function HomePage() {
   const { intersecting, observerRef } = useIntersectionObserver(
@@ -25,23 +27,24 @@ export default function HomePage() {
   const [paginatedResponse, setPaginatedResponse] = useState<PaginatedQueryResponseType>(PaginatedQueryResponse);
   const [appState, setappState] = useState<AppState>(initAppState);
   const [appState1, setappState1] = useState<AppState>(initAppState);
-  const [reload, setReload] = useState<number>(0)
+  const [reload, setReload] = useState<number>(0);
   const [audios, setAudios] = useState<AudioTypes>({ recent: [], featured: [] });
   const [hostname, setHostname] = useState('');
+  const [contactUs, setContactUs] = useState(false);
 
   useEffect(() => {
     setHostname(window?.location?.href || 'https://lovelyaudios.com');
     if (!isServerOnline) return;
     (async () => {
-      if (audios?.featured?.length) return;
+      if (audios?.featured?.length && reload === 0) return;
 
-      setappState(prev => ({...prev, loading: true }));
-      if (retries >= 10) return;
+      setappState(prev => ({ ...prev, loading: true }));
+      if (retries >= 5) return;
       try {
         const audioData = await appService.fetchAudios(paginatedQuery);
         const { docs, ...queryParams } = audioData.data;
-        const sortedAudios =  docs?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-        
+        const sortedAudios = docs?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
         setAudios((prev) => ({ ...prev, featured: sortedAudios }));
         setPaginatedResponse(queryParams)
         setRetries(0);
@@ -57,17 +60,17 @@ export default function HomePage() {
       }
     })()
   }, [retries, reload, isServerOnline, audios?.featured])
-  
+
   useEffect(() => {
     if (!isServerOnline) return;
     (async () => {
-      if (audios?.recent?.length) return;
+      if (audios?.recent?.length && reload === 0) return;
 
-      setappState1(prev => ({...prev, loading: true }));
+      setappState1(prev => ({ ...prev, loading: true }));
       if (retries1 >= 3) return;
       try {
-        const recendtAudiosData = await appService.fetchRecommendedAudios();
-        const sortedRecentAudios =  recendtAudiosData?.data?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+        const recentAudiosData = await appService.fetchRecentAudiobooks();
+        const sortedRecentAudios = recentAudiosData?.data?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
         setAudios((prev) => ({ ...prev, recent: sortedRecentAudios }));
         setRetries1(0);
@@ -83,7 +86,7 @@ export default function HomePage() {
       }
     })()
   }, [retries1, reload, isServerOnline, audios?.recent])
-  
+
   useEffect(() => {
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
@@ -99,9 +102,9 @@ export default function HomePage() {
   }, [current.currentGenre, searchQuery])
 
   return (
-    <div className="bg-gradient-to-b from-sky-50 to-white">
-      
-      <MetaTags 
+    <div className="relative bg-gradient-to-b from-sky-50 to-white transition-transform duration-300">
+
+      <MetaTags
         appName={appInfo?.name || 'Lovely Audios'}
         title={appInfo?.name || 'Lovely Audios'}
         description="Your Journey Through Stories Begins Here"
@@ -109,10 +112,10 @@ export default function HomePage() {
         image='/files/lovely-audio.png'
       />
 
-      <header 
-      ref={observerRef}
-      id='home'
-      className="bg-sky-100 py-20">
+      <header
+        ref={observerRef}
+        id='home'
+        className="bg-sky-100 py-20">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between">
             <div className="max-w-2xl">
@@ -129,15 +132,15 @@ export default function HomePage() {
               {
                 searchQuery
                   ? <SearchResults
-                      searchQuery={searchQuery}
-                      searchedAudios={searchedAudios}
-                    />
+                    searchQuery={searchQuery}
+                    searchedAudios={searchedAudios}
+                  />
                   : null
               }
 
               <a
-              href='#featured'
-              className={`${searchQuery ? 'hidden' : ''} bg-sky-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-sky-700 transition-colors`}>
+                href='#featured'
+                className={`${searchQuery ? 'hidden' : ''} bg-sky-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-sky-700 transition-colors`}>
                 Start Listening Now
               </a>
             </div>
@@ -153,11 +156,11 @@ export default function HomePage() {
         audios={audios.recent}
         setReload={setReload!}
       />
-  
+
       <SectionedCards sectionTitle='featured'
-      appState={appState}
-      audios={audios.featured}
-      setReload={setReload!}
+        appState={appState}
+        audios={audios.featured}
+        setReload={setReload!}
       />
 
       <PaginatedNav
@@ -167,6 +170,21 @@ export default function HomePage() {
         setAudios={setAudios}
         setReload={setReload}
       />
+
+      {contactUs ? <ContactForm /> : null}
+
+      {
+        contactUs ?
+          <MdCancel 
+            onClick={() => setContactUs(false)}
+            className='size-11 cursor-pointer p-2.5 absolute bottom-6 z-10 right-2 bg-sky-600 active:bg-sky-500 rounded-full'
+          />
+          :
+          <ContactIcon
+            onClick={() => setContactUs(true)}
+            className='hidden size-11 cursor-pointer p-2.5 fixed bottom-8 z-10 left-4 bg-sky-600 active:bg-sky-500 rounded-full'
+          />
+      }
 
       <a href="#home"
         className={`${!intersecting.isIntersecting ? 'fixed' : 'hidden'} bottom-10 right-5 shadow-md border-gray-600 focus:outline-none border-2 animate-pulse rounded-full w-8 h-8 grid place-content-center hover:bg-black hover:text-white transition-colors`}>

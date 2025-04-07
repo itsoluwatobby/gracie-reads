@@ -125,7 +125,7 @@ export default function BookPage() {
               <p className='capitalize font-medium flex-wrap'>By: <span className="">{audioBook?.author}</span></p>
               <div className='overflow-hidden flex flex-col text-[13px]'>
                 <span>Categories:</span>
-                <div className='pl-1 flex items-center flex-wrap gap-1 capitalize font-medium text-xs'>
+                <div className='pl-1 flex items-center flex-wrap gap-1 capitalize text-xs'>
                   {
                     audioBook?.genre?.sort()?.map((genre, i) => (
                       <span key={i} className='bg-sky-100 rounded-sm p-0.5 px-1.5'>{genre}</span>

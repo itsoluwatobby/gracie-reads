@@ -61,7 +61,10 @@ export default function BookRecommendations({ currentBookId }: BookRecommendatio
 
         {
           appState.loading ?
-          <BookLoadingState containerRef={containerRef as React.LegacyRef<HTMLDivElement>} />
+            <BookLoadingState 
+              classNames="flex items-center flex-nowrap"
+              containerRef={containerRef as React.LegacyRef<HTMLDivElement>}
+            />
           :
           appState.error ?
           <span className="text-red-500 text-lg flex justify-center items-center gap-2">
@@ -71,7 +74,7 @@ export default function BookRecommendations({ currentBookId }: BookRecommendatio
           :
           <div 
           ref={containerRef as React.LegacyRef<HTMLDivElement>}
-          className='customScrollBar w-full grid grid-cols-[repeat(auto-fill,minmax(14rem,1fr))] gap-4 transition-transform overflow-x-scroll p-3'>
+          className='customScrollBar w-full flex items-center flex-nowrap gap-4 transition-transform overflow-x-scroll p-3'>
           {
             recommended?.length ?
               recommended.map((book) => (
@@ -82,6 +85,7 @@ export default function BookRecommendations({ currentBookId }: BookRecommendatio
                   title={book.title}
                   thumbnail={book.thumbnail}
                   chapterId={book.chapterId}
+                  classNames="w-[17rem] mobile:w-[23rem] flex-none"
                 />
               ))
               : <span className="whitespace-nowrap">No recommended audiobooks</span>

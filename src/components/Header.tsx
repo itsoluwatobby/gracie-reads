@@ -2,7 +2,7 @@ import { appService } from '../app/appService';
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAppContext } from '../hooks/useAppContext';
-import { BookOpen, Lock } from 'lucide-react';
+import { BookOpen, Lock, Unlock } from 'lucide-react';
 import { CacheKeys, PageRoutes } from "../utils";
 import { useEffect, useState } from 'react';
 
@@ -52,15 +52,18 @@ export default function Header({ appName, setIsLoginModalOpen }: HeaderProps) {
           <div className="flex items-center space-x-5">
             {
               loggedIn
-              ? <Link to={PageRoutes.dashboard} className='underline underline-offset-2 text-black self-end'>Dashboard</Link>
+              ? <Link to={PageRoutes.dashboard} className={`underline underline-offset-2 text-black self-end ${pathname === PageRoutes.dashboard ? 'hidden' : ''}`}>Dashboard</Link>
               : null
             }
             <button
               onClick={handleClick}
-              className="flex items-center px-4 py-2 rounded-lg bg-sky-600 text-white hover:bg-sky-700 transition-colors"
+              className="grid place-content-center w-12 h-11 rounded-lg bg-sky-600 text-white hover:bg-sky-700 transition-colors"
             >
-              <Lock size={16} className="mr-2" />
-              {loggedIn ? 'Logout' : 'Login'}
+              {
+                loggedIn ?
+                <Unlock size={17} className="" />
+                : <Lock size={17} className="" />
+              }
             </button>
           </div>
         </div>

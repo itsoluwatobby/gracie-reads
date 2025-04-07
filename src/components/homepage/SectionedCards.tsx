@@ -25,7 +25,7 @@ export default function SectionedCards({ sectionTitle, audios, appState, setRelo
   return (
     <section
     id='featured'
-    className='py-16 bg-sky-50'
+    className='py-12 bg-sky-50'
     >
     <div className="container mx-auto px-4">
       <div className="flex items-center justify-between mb-8">
@@ -44,10 +44,10 @@ export default function SectionedCards({ sectionTitle, audios, appState, setRelo
       {
         appState?.loading 
         ? (
-          <div className='grid grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-4 transition-transform'>
+          <div className='self-center grid place-content-center grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-4 transition-transform'>
             {
               [...Array(4).keys()].map((i) => (
-                <article key={i} className='rounded-md h-48 bg-sky-100 animate-pulse mobile:w-36 mobile:h-52 text-sm transition-transform'></article> 
+                <article key={i} className='rounded-md h-48 bg-sky-100 animate-pulse mobilew-36 mobile:h-48 text-sm transition-transform'></article> 
               ))
             }
           </div>
@@ -58,7 +58,7 @@ export default function SectionedCards({ sectionTitle, audios, appState, setRelo
           ? (
             <div className='text-red-500 text-lg flex justify-center items-center gap-2'>
             {appState?.errMsg}
-            <MdErrorOutline className='text-2xl' />
+            <MdErrorOutline className='text-3xl' />
             </div>
           ) 
         
