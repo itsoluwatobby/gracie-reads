@@ -7,7 +7,7 @@ import { appService } from '../../app/appService';
 
 export default function ContactForm() {
   const [appState, setAppState] = useState(initAppState);
-  const [formData, setFormData] = useState(
+  const [formData, setFormData] = useState<Partial<Omit<ContactUs, '_id'>>>(
     {
       name: '',
       email: '',
@@ -16,19 +16,17 @@ export default function ContactForm() {
   );
 
   const canSubmit = [...Object.values(formData)].every(Boolean);
-   
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSubmit || appState.loading) return;
 
     try {
       setAppState((prev) => ({ ...prev, loading: true }));
-      await appService.getAudioChapterById('');
-
-      console.log('Form submitted:', formData);
-      // Reset form
+      await appService.createContact(formData);
+      toast.success('Form submitted!');
       setFormData({ name: '', email: '', message: '' });
-    } catch(err: any) {
+    } catch (err: any) {
       const error = err as any;
       const message = error.response?.data?.error?.message || error?.message;
       setAppState((prev) => ({ ...prev, error: true, errMsg: message }));
@@ -44,7 +42,7 @@ export default function ContactForm() {
         <div className="mx-auto">
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Contact Us</h2>
           <p className="text-gray-600 mb-6">Have questions or requests? We'd love to hear from you.</p>
-          
+
           <form onSubmit={handleSubmit} className="bg-white text-black rounded-xl px-3 text-[13px]">
             <div className="space-y-3">
               <div>
@@ -91,7 +89,8 @@ export default function ContactForm() {
 
               <button
                 type="submit"
-                className="w-full bg-sky-600 text-white py-3 rounded-lg font-semibold hover:bg-sky-700 transition-colors flex items-center justify-center"
+                disabled={!canSubmit || appState.loading}
+                className={`w-full ${!canSubmit || appState.loading ? 'bg-sky-400 cursor-not-allowed' : 'bg-sky-600'} text-white py-3 rounded-lg font-semibold hover:bg-sky-700 transition-colors flex items-center justify-center`}
               >
                 <Send size={18} className="mr-2" />
                 Send Message

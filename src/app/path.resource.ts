@@ -67,8 +67,24 @@ export const AdminPaths = {
     endpoint: `${AdminBasePath}/make-private`,
     method: HTTPMethods.PATCH,
   },
-   delete: {
+  delete: {
     endpoint: `${AdminBasePath}/delete`,
+    method: HTTPMethods.DELETE,
+  },
+  contactRepliedTo: {
+    endpoint: `${AdminBasePath}/contact-repliedTo`,
+    method: HTTPMethods.PATCH,
+  },
+  getContact: {
+    endpoint: `${AdminBasePath}/contact`,
+    method: HTTPMethods.GET,
+  },
+  getContacts: {
+    endpoint: `${AdminBasePath}/contacts`,
+    method: HTTPMethods.GET,
+  },
+  deleteContact: {
+    endpoint: `${AdminBasePath}/contact`,
     method: HTTPMethods.DELETE,
   },
 };
@@ -93,6 +109,38 @@ export const AppConfigPaths = {
   },
   logout: {
     endpoint: `${AppConfigBasePath}/logout`,
+    method: HTTPMethods.POST,
+  },
+};
+
+const CommentBasePath = 'api/v1/comments';
+export const CommentPaths = {
+  create: {
+    endpoint: CommentBasePath,
+    method: HTTPMethods.POST,
+  },
+  getComment: {
+    endpoint: `${CommentBasePath}/get`,
+    method: HTTPMethods.GET,
+  },
+  getComments: {
+    endpoint: `${CommentBasePath}/all`,
+    method: HTTPMethods.GET,
+  },
+  like: {
+    endpoint: `${CommentBasePath}/like`,
+    method: HTTPMethods.PATCH,
+  },
+  delete: {
+    endpoint: `${CommentBasePath}/delete`,
+    method: HTTPMethods.DELETE,
+  },
+};
+
+const ContactUsBasePath = 'api/v1/contactUs';
+export const ContactUsPaths = {
+  create: {
+    endpoint: ContactUsBasePath,
     method: HTTPMethods.POST,
   },
 };

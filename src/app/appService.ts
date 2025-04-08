@@ -1,7 +1,7 @@
 import { AxiosProgressEvent, AxiosRequestConfig } from "axios";
 import { appRequest } from "./app.config";
 import axios from 'axios'
-import { AdminPaths, AppConfigPaths, ChapterPaths, Paths } from "./path.resource";
+import { AdminPaths, AppConfigPaths, ChapterPaths, CommentPaths, ContactUsPaths, Paths } from "./path.resource";
 import { PaginatedQuery } from "../utils/initStates";
 
 type ChapterUpload = {
@@ -294,6 +294,110 @@ class AppService {
       `${AdminPaths.toggleBookStatus.endpoint}/${audioId}`,
       {},
       AdminPaths.toggleBookStatus.method,
+    );
+
+    return result.data;
+  }
+
+  async contactRepliedTo(contactId: string) {
+    const result = await appRequest<unknown, ResponseData<ContactUs>>(
+      `${AdminPaths.contactRepliedTo.endpoint}/${contactId}`,
+      {},
+      AdminPaths.contactRepliedTo.method,
+    );
+
+    return result.data;
+  }
+
+  async getContact(contactId: string) {
+    const result = await appRequest<unknown, ResponseData<ContactUs>>(
+      `${AdminPaths.getContact.endpoint}/${contactId}`,
+      {},
+      AdminPaths.getContact.method,
+    );
+
+    return result.data;
+  }
+
+  async getContacts(query: typeof PaginatedQuery) {
+    const result = await appRequest<unknown, ResponseData<{ docs: ContactUs[] } & PaginatedQueryResponseType>>(
+      AdminPaths.getContacts.endpoint,
+      {},
+      AdminPaths.getContacts.method,
+      'json',
+      query,
+    );
+
+    return result.data;
+  }
+
+  async deleteContact(contactId: string) {
+    const result = await appRequest<unknown, ResponseData<{ id: string }>>(
+      `${AdminPaths.deleteContact.endpoint}/${contactId}`,
+      {},
+      AdminPaths.deleteContact.method,
+    );
+
+    return result.data;
+  }
+
+  async createContact(newContact: Partial<Omit<ContactUs, '_id'>>) {
+    const result = await appRequest<unknown, ResponseData<{ id: string }>>(
+      ContactUsPaths.create.endpoint,
+      newContact,
+      ContactUsPaths.create.method,
+    );
+
+    return result.data;
+  }
+
+  async createComment(newComment: Partial<Omit<CommentProps, '_id'>>) {
+    const result = await appRequest<unknown, ResponseData<ContactUs>>(
+      ContactUsPaths.create.endpoint,
+      newComment,
+      ContactUsPaths.create.method,
+    );
+
+    return result.data;
+  }
+
+  async getComments(query: typeof PaginatedQuery) {
+    const result = await appRequest<unknown, ResponseData<{ docs: CommentProps[] } & PaginatedQueryResponseType>>(
+      CommentPaths.getComments.endpoint,
+      {},
+      CommentPaths.getComments.method,
+      'json',
+      query,
+    );
+
+    return result.data;
+  }
+
+  async getComment(commentId: string) {
+    const result = await appRequest<unknown, ResponseData<CommentProps>>(
+      `${CommentPaths.getComment.endpoint}/${commentId}`,
+      {},
+      CommentPaths.getComment.method,
+    );
+
+    return result.data;
+  }
+
+  async deleteComment(contactId: string) {
+    const result = await appRequest<unknown, ResponseData<{ id: string }>>(
+      `${CommentPaths.delete.endpoint}/${contactId}`,
+      {},
+      CommentPaths.delete.method,
+    );
+
+    return result.data;
+  }
+
+  async likeAudioComment(id: string) {
+    const result = await appRequest<unknown, ResponseData<CommentProps>>(
+      `${CommentPaths.like.endpoint}/${id}`,
+      {},
+      CommentPaths.like.method,
     );
 
     return result.data;

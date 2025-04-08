@@ -198,3 +198,21 @@ type AppDashboardProps =  {
   };
   analytics: AnalyticsProps[]
 }
+
+type ContactUs = {
+  _id: string;
+  name: string;
+  email: string;
+  message: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+type CommentProps = {
+  _id: string;
+  comment: string;
+  likes: any[];
+  audioId: string
+  createdAt: string;
+  updatedAt: string;
+}
